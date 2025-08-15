@@ -4,20 +4,44 @@
 # Contents - 目录
 <nav>
 <ul>
-  <li><a href="#Magnetic-Localization"> 1. Mathmatical Theory 数学理论</a></li>
-  <li><a href="#Optimal_Control"> 2. Signal Processing - 信号处理</a></li>
-  <li><a href="#Optimal_Control"> 2. Optimal Control - 最优化控制</a></li>
-  <li><a href="#Machine_Learning"> 3. Machine Learning and related - 机器学习及相关</a></li>
-  <li><a href="#Computer-Vision"> 4. Computer Vision - 计算机视觉</a></li>
-  <li><a href="#Large-Language-Model"> 5. Large Language Model - 大语言模型</a></li>
-  <li><a href="#Vision-Language-Model/Vision-Language-Action"> 6. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型</a></li>
-  <li><a href="#Agent"> 7. Agent - 智能体</a></li>
-  <li><a href="#Medical_Robot"> 7. Medical Robot(Surgical robot) - 医疗机器人(手术机器人)</a></li>
+  <li><a href="#Mathmatical_Theory"> 1. Mathmatical Theory - 数学理论</a></li>
+  <li><a href="#Signal_Processing"> 2. Signal Processing - 信号处理</a></li>
+  <ul>
+    <li><a href="#Kalman_Filter"> 2.1 Kalman Filter - 卡尔曼滤波</a></li>
+  </ul>
+  <li><a href="#Optimal_Control"> 3. Optimal Control - 最优化控制</a></li>
+  <ul>
+    <li><a href="#Model_Predictive_Control"> 3.1 Model Predictive Control - 模型预测控制</a></li>
+  </ul>
+  <li><a href="#Machine_Learning"> 4. Machine Learning and related - 机器学习及相关</a></li>
+  <ul>
+    <li><a href="#Supervised_Learning"> 4.1 Supervised Learning - 监督学习</a></li>
+    <li><a href="#Unsupervised_Learning"> 4.2 Unsupervised Learning - 无监督学习</a></li>
+    <li><a href="#Reinforcement_Learning"> 4.3 Reinforcement Learning - 强化学习</a></li>
+    <ul>
+      <li><a href="#Reinforcement_Learning"> 4.3.1 Reinforcement Learning - 强化学习</a></li>
+      <li><a href="#Deep_Reinforcement_Learning"> 4.3.2 Deep Reinforcement Learning - 深度强化学习</a></li>
+    </ul>
+    <li><a href="#Reinforcement_Learning"> 4.4 Characterization/Modeling Techniques - 表征/建模技术</a></li>
+    <ul>
+      <li><a href="#Deep_Learning"> 4.4.1 Deep Learning - 深度学习</a></li>
+    </ul>
+  </ul>
+  <li><a href="#Computer_Vision"> 5. Computer Vision - 计算机视觉</a></li>
+  <li><a href="#Large_Language_Model"> 6. Large Language Model - 大语言模型</a></li>
+  <li><a href="#Vision_Language_Model/Vision_Language_Action"> 7. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型</a></li>
+  <li><a href="#Agent"> 8. Agent - 智能体</a></li>
+  <li><a href="#Medical_Robot"> 9. Medical Robot(Surgical robot) - 医疗和手术相关机器人</a></li>
 </ul>
 
 
+## 1. Mathmatical Theory - 数学理论 <a id="Mathmatical_Theory"></a>
 
-## 2. Optimal Control - 最优化控制 <a id="Optimal_Control"></a>
+
+## 2. Signal Processing - 信号处理 <a id="Signal_Processing"></a>
+
+
+## 3. Optimal Control - 最优化控制 <a id="Optimal_Control"></a>
 
 - Implementation of Nonlinear Model Predictive Path-Following Control for an Industrial Robot 
 *T. Faulwasser, T. Weber, P. Zometa and R. Findeisen; IEEE Transactions on Control Systems Technology 2017 Vol. 25 Issue 4 Pages 1505-1511; DOI: 10.1109/tcst.2016.2601624*
@@ -547,21 +571,20 @@
 *R. Xu, Z. Jiang, B. Liu, Y. Wang and H. Qian; IEEE Transactions on Robotics 2024 Vol. 40 Pages 4396-4413; DOI: 10.1109/tro.2024.3463476* -->
 
 
-## 3. Machine Learning: SL, USL, DL, RL - 机器学习及相关<a id="Machine_Learning"></a>
+## 4. Machine Learning and related - 机器学习及相关<a id="Machine_Learning"></a>
 
 
 
-## 4. Computer Vision - 计算机视觉<a id="Computer-Vision"></a>
+## 5. Computer Vision - 计算机视觉<a id="Computer_Vision"></a>
 
 
 
 
-
-## 5. Large Language Model - 大语言模型<a id="Large-Language-Model"></a>
-
+## 6. Large Language Model - 大语言模型<a id="Large_Language_Model"></a>
 
 
-## 6. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型<a id="Vision-Language-Model/Vision-Language-Action"></a>
+
+## 7. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型<a id="Vision_Language_Model/Vision_Language_Action"></a>
 
 - Learning to Act Anywhere with Task-centric Latent Actions
 *Y. Y. Qingwen Bu, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, and Hongyang Li; Robotics: Science and Systems Conference 2025; DOI: 10.48550/arxiv.2505.06111*
@@ -639,9 +662,9 @@
 *Y. Y. Qingwen Bu, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, and Hongyang Li; Robotics: Science and Systems Conference 2025; DOI: 10.48550/arxiv.2505.06111*
 
 
+  <li><a href="#Agent"> 8. Agent - 智能体</a></li>
 
-
-## 7. Agent - 智能体<a id="Agent"></a>
+## 8. Agent - 智能体<a id="Agent"></a>
 
 - CLEA: Closed-Loop Embodied Agent for Enhancing Task Execution in Dynamic Environments 
 *Mingcong Lei, G. W., Yiming Zhao, Zhixin Mai, Qing Zhao, Yao Guo, Zhen Li, Shuguang Cui, Yatong Han, and Jinke Ren; IEEE International Conference on Robotics and Automation 2025; DOI: 10.48550/arxiv.2503.00729*
@@ -724,5 +747,83 @@
 
 
 
+## 9. Medical Robot(Surgical robot) - 医疗和手术相关机器人<a id="Medical_Robot"></a>
 
-## 8. Magnetic Localization - 磁定位<a id="Magnetic-Localization"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####
+# About us - 关于我们
+###### "己欲立而立人，己欲达而达人"
+我们是一个由机器人与具身初学者组成的团队, 希望能够通过我们自己的学习、科研经验, 为志同道合的朋友提供一些帮助。欢迎更多朋友加入我们的项目, 也很欢迎交友、学术合作, 有任何问题, 可以联系邮箱 `yimouwu0@gmail.com` 或 `ymwu@surgery.cuhk.edu.hk`。
+
+<p><b>🎠Contributors</b>: <a href="https://yimouwu.github.io/">吴贻谋 (25'港中文MPhil)</a> 
+</p> 
+
+<a href="https://github.com/yimouwu/Robotics-and-Embodied-AI-Review/contributors">
+  <img src="https://contrib.rocks/image?repo=yimouwu/Robotics-and-Embodied-AI-Review" />
+</a>
+
+#####
+> 关于本仓库的知识讨论，或者任何其他问题,欢迎联系吴贻谋（25'fall CUHK 医学院外科系 MPhil，方向为机器人（医疗手术）与具身智能）微信：yimouwu777 或 邮箱：yimouwu0@gmail.com
+
+# 👍 Citation <a id="citation"></a>
+
+如果本仓库对你的研究或学习有所帮助，请引用：
+```bibtex
+@misc{marvelousliteraturereview2025,
+  title     = {Marvelous-Literature-Review},
+  author    = {Yimou Wu},
+  month     = {August},
+  year      = {2025},
+  url       = {https://github.com/yimouwu/Marvelous-Literature-Review},
+}
+```
+
+
+# 🏷️ License <a id="license"></a>
+
+This repository is released under the MIT license. See [LICENSE](./LICENSE) for additional details.
+
+
+
+# ⭐️ Star History <a id="star-history"></a>
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=yimouwu/Marvelous-Literature-Review&type=Date)](https://www.star-history.com/#yimouwu/Marvelous-Literature-Review&Date)
