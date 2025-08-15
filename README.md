@@ -19,10 +19,10 @@
     <li><a href="#Unsupervised_Learning"> 4.2 Unsupervised Learning - 无监督学习</a></li>
     <li><a href="#Reinforcement_Learning"> 4.3 Reinforcement Learning - 强化学习</a></li>
     <ul>
-      <li><a href="#Reinforcement_Learning"> 4.3.1 Reinforcement Learning - 强化学习</a></li>
+      <li><a href="#reinforcement_learning"> 4.3.1 Reinforcement Learning - 强化学习</a></li>
       <li><a href="#Deep_Reinforcement_Learning"> 4.3.2 Deep Reinforcement Learning - 深度强化学习</a></li>
     </ul>
-    <li><a href="#Reinforcement_Learning"> 4.4 Characterization/Modeling Techniques - 表征/建模技术</a></li>
+    <li><a href="#Characterization/Modeling_Techniques"> 4.4 Characterization/Modeling Techniques - 表征/建模技术</a></li>
     <ul>
       <li><a href="#Deep_Learning"> 4.4.1 Deep Learning - 深度学习</a></li>
     </ul>
@@ -38,10 +38,38 @@
 ## 1. Mathmatical Theory - 数学理论 <a id="Mathmatical_Theory"></a>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 ## 2. Signal Processing - 信号处理 <a id="Signal_Processing"></a>
+
+### 2.1 Kalman Filter - 卡尔曼滤波 <a id="Kalman_Filter"></a>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 3. Optimal Control - 最优化控制 <a id="Optimal_Control"></a>
+
+### 3.1 Model Predictive Control - 模型预测控制 <a id="Model_Predictive_Control"></a>
 
 - Implementation of Nonlinear Model Predictive Path-Following Control for an Industrial Robot 
 *T. Faulwasser, T. Weber, P. Zometa and R. Findeisen; IEEE Transactions on Control Systems Technology 2017 Vol. 25 Issue 4 Pages 1505-1511; DOI: 10.1109/tcst.2016.2601624*
@@ -571,7 +599,55 @@
 *R. Xu, Z. Jiang, B. Liu, Y. Wang and H. Qian; IEEE Transactions on Robotics 2024 Vol. 40 Pages 4396-4413; DOI: 10.1109/tro.2024.3463476* -->
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 4. Machine Learning and related - 机器学习及相关<a id="Machine_Learning"></a>
+
+### 4.1 Supervised Learning - 监督学习 <a id="Supervised_Learning"></a>
+
+### 4.2 Unsupervised Learning - 无监督学习 <a id="Unsupervised_Learning"></a>
+
+### 4.3 Reinforcement Learning - 强化学习 <a id="Reinforcement_Learning"></a>
+
+#### 4.3.1 Reinforcement Learning - 强化学习 <a id="reinforcement_learning"></a>
+
+#### 4.3.2 Deep Reinforcement Learning - 深度强化学习 <a id="Deep_Reinforcement_Learning"></a>
+
+### 4.4 Characterization/Modeling Techniques - 表征/建模技术 <a id="Characterization/Modeling_Techniques"></a>
+
+#### 4.4.1 Deep Learning - 深度学习 <a id="Deep_Learning"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -580,7 +656,43 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 6. Large Language Model - 大语言模型<a id="Large_Language_Model"></a>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -662,7 +774,17 @@
 *Y. Y. Qingwen Bu, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, and Hongyang Li; Robotics: Science and Systems Conference 2025; DOI: 10.48550/arxiv.2505.06111*
 
 
-  <li><a href="#Agent"> 8. Agent - 智能体</a></li>
+
+
+
+
+
+
+
+
+
+
+
 
 ## 8. Agent - 智能体<a id="Agent"></a>
 
@@ -744,6 +866,16 @@
   **关键词**
 
   - 闭环规划评估架构, 大型语言模型（LLM）, 视觉语言模型（VLM）, 部分可观测马尔可夫决策过程（POMDP）, 机器人任务执行, 动态环境, 多机器人协作, 计划-执行-评估循环, 环境记忆与置信状态, 开源模型应用
+
+
+
+
+
+
+
+
+
+
 
 
 
