@@ -33,6 +33,7 @@
   <li><a href="#Agent"> 8. Agent - 智能体</a></li>
   <li><a href="#Medical_Robot"> 9. Medical Robot(Surgical robot) - 医疗和手术相关机器人</a></li>
 </ul>
+</nav>
 
 
 ## 1. Mathmatical Theory - 数学理论 <a id="Mathmatical_Theory"></a>
@@ -593,10 +594,53 @@
 
   - 置信度分析, 波列网络（Wavelet Network）, 运动规划, 浮动基座机械臂, 物体捕获, 贝叶斯方法, 实时控制, 无人艇（USV）, 自动化系统, 不确定性处理
 
-<!-- ---
 
-- Confidence-Aware Object Capture for a Manipulator Subject to Floating-Base Disturbances 
-*R. Xu, Z. Jiang, B. Liu, Y. Wang and H. Qian; IEEE Transactions on Robotics 2024 Vol. 40 Pages 4396-4413; DOI: 10.1109/tro.2024.3463476* -->
+---
+
+- Model-based Bending Control of Magnetically-actuated Robotic Endoscopes for Automatic Retroflexion in Confined Spaces
+*Y. L. Yichong Sun, Jixiu Li, Wing Yin Ng, Yitian Xian, Yisen Huang, Philip Wai Yan Chiu, and Zheng Li; IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2023*
+
+  ### 想解决的问题  
+  1. 软尾导管-磁驱内镜在弯曲/翻折（retroflexion）时，软管弹性、外部磁场约束与狭窄腔道之间相互耦合，缺乏可靠的运动学模型与控制律。  
+  2. 传统“U”型翻折需要较大回旋空间，遇到右侧结肠等狭窄段易失败，影响病灶检出率。  
+  3. 现有控制多忽略软尾贡献或简单 PID，导致位置、姿态误差大，且难量化软管扫掠面积对黏膜安全性的影响。  
+
+  ### 具体做法  
+
+  #### 1. 软尾 + 磁头一体化运动学  
+  * 软尾采用 Cosserat Rod 连续体模型：  
+    * 中心线 P(s)、截面旋转 R(s)∈SO₃，弯-挠曲率 C(s)=RᵀR′。  
+    * 假设无剪切/拉伸，材料线弹性，推导内部力 f_in、力矩 τ_in 的平衡微分方程 (3)(4)。  
+  * 磁头刚体变换：P_t(m)=P(L)+mR_t i_z，内部力/矩沿 m 均衡到磁头中心；将磁场力-矩 w_e=[f_e;τ_e] 通过边界条件(8)(9)(10)耦合至软尾。  
+  * 微分组由四元数形式 (11) 保证 R(s)∈SO₃，采用射线-Runge–Kutta shooting 数值求解。  
+
+  #### 2. 模型叠加控制律  
+  w_u = w_en + δw  
+  * **误差-PID分量** δw：  
+    * 位置误差 e_p=P_des−P_t，置于切向/法向投影矩阵 P_ep、P_ev；  
+    * 姿态误差 e_o = R_t i_z × C_des。  
+    * δw = [K_v e_v + K_p e_p ; K_o e_o]。  
+  * **模型反馈分量** w_en = K_en [f_in(L); τ_in(L)] ，抵消软尾内力矩扰动。  
+  * PID 与模型项并联：收敛时 δw→0，系统以 w_en 平衡。校准系数 K_en 补偿摩擦等非建模误差。  
+
+  #### 3. “紧凑空间”自动翻折策略  
+  1. 定义腔道中线 L_c；首 waypoint P_mid 位于 L_c，姿态与初始正交；  
+  2. 当磁头达 P_mid, 切换到终点 P_end（同在 L_c）且姿态 180° 翻转；  
+  3. 通过上式控制器逐段追踪 waypoint，实现磁头轨迹尽量贴近中线 → 最小扫掠面积。  
+
+  ### 效果  
+
+  | 指标 | 紧凑翻折 | 传统“U” | 降幅 |  
+  |----|----|----|----|  
+  | 最大横向偏移 L_Xmax | 60.8 mm | 86.7 mm | −30 % |  
+  | 终点到中线距 D_Xlast | 16.3 mm | 78.7 mm | −79 % |  
+  | 软管扫掠面积 S_approx | 2864 mm² | 5404 mm² | −47 % |  
+
+  * 弯曲控制实验：目标 45°/90°/135°/180°，稳态位置误差 ≤3 mm，姿态误差 ≤4°。  
+  * 翻折耗时约 50 s，可在∅55 mm 管道完成，大幅提高狭窄腔段可视范围。  
+
+  ### 关键词  
+  磁驱软体内镜；Cosserat Rod 模型；模型补偿 PID 控制；自动翻折；紧凑空间；扫掠面积
 
 
 
@@ -611,8 +655,7 @@
 
 
 
-
-## 4. Machine Learning and related - 机器学习及相关<a id="Machine_Learning"></a>
+## 4. Machine Learning and related - 机器学习及相关 <a id="Machine_Learning"></a>
 
 ### 4.1 Supervised Learning - 监督学习 <a id="Supervised_Learning"></a>
 
@@ -620,11 +663,12 @@
 
 ### 4.3 Reinforcement Learning - 强化学习 <a id="Reinforcement_Learning"></a>
 
-#### 4.3.1 Reinforcement Learning - 强化学习 <a id="reinforcement_learning"></a>
+#### 4.3.1 Reinforcement Learning - 强化学习 <a id="Reinforcement_Learning"></a>
 
 #### 4.3.2 Deep Reinforcement Learning - 深度强化学习 <a id="Deep_Reinforcement_Learning"></a>
 
-### 4.4 Characterization/Modeling Techniques - 表征/建模技术 <a id="Characterization/Modeling_Techniques"></a>
+
+### 4.4 Characterization/Modeling Techniques - 表征/建模技术 <a id="Characterization_Modeling_Techniques"></a>
 
 #### 4.4.1 Deep Learning - 深度学习 <a id="Deep_Learning"></a>
 
@@ -651,7 +695,440 @@
 
 
 
-## 5. Computer Vision - 计算机视觉<a id="Computer_Vision"></a>
+## 5. Computer Vision - 计算机视觉 <a id="Computer_Vision"></a>
+
+- π^3: Scalable Permutation-Equivariant Visual Geometry Learning
+*J. Z. Yifan Wang, Haoyi Zhu, Wenzheng Chang, Yang Zhou, Zizun Li, Junyi Chen, Jiangmiao Pang, Chunhua Shen, Tong He; 2025*
+
+  ### 想解决的问题  
+  1. 现有前馈 3D 重建网络（VGGT、VGGSfM、DUSt3R 等）必须人为指定“参考视图”，并把所有几何预测到该坐标系。  
+    • 参考帧若选得不好会导致性能大幅波动，训练-推理都对输入顺序敏感，难以扩展到海量视图或动态场景。  
+  2. 相机-点云的尺度/仿射不变性被硬编码到参考系后，网络学习空间被限制，收敛慢、鲁棒性差。  
+  3. 需要一个完全“对输入排序等变(permutation-equivariant)”的架构，可在无参考帧、任意视图数目下高效输出：  
+    - 仿射不变相机位姿 - 尺度不变局部点云 - 置信度等，覆盖静/动态、室内/外、多域数据。
+
+  ### 具体做法  
+
+  #### 1. 架构设计：œÄ³ (PI3) Transformer  
+  1. 去除一切顺序偏置  
+    * 不使用帧 index positional embedding、不拼接 camera token。  
+    * 输入 N 张图，各自 patchify→DINOv2 token。  
+  2. 交替注意力模块（与 VGGT 类似）  
+    * View-wise Self-Attn：帧内局部信息。  
+    * Global Self-Attn：跨帧几何一致性。  
+    * 完全自注意，无 cross-attn，层数 36（L 变体）。  
+  3. Decoder（共享结构不同权）  
+    * 5 层轻量 Transformer，仅对单帧 token 自注意。  
+    * 三个 head：  
+      - Camera Head：Reloc3r 结构输出 4×4 仿射位姿 Ti（旋转 9D→SVD 正交化）；  
+      - PointMap Head：MLP+PixelShuffle 输出 X_i ∈R^{H×W×3}（相机坐标系，未知尺度）；  
+      - Confidence Head：同结构输出 C_i ∈R^{H×W}.  
+
+  #### 2. 目标表示  
+  * **尺度不变局部点云**：每帧独立坐标，训练时全序列共享单一尺度 s★ 与 GT 对齐（ROE solver）。  
+  * **仿射不变相机**：仅监督两帧间相对位姿 (R, t)，用 s★ 修正平移。  
+
+  #### 3. 损失函数  
+  ```
+  L = Lpoints + λn Lnormal + λc Lconf + λcam Lcam
+  ```
+  * Lpoints：∑ (1/z)·|s★·x̂ - x|_1  
+  * Lnormal：像素邻域叉乘→角度差  
+  * Lconf：BCE，阈值 ζ 上下界。  
+  * Lcam = mean_{i≠j}( geodesic(R̂,R) + α·Huber(s★ t̂ - t) ).  
+
+  #### 4. 训练与数据  
+  * 15 个多模态数据集混合（GTA-SfM, CO3D, ScanNet++, HyperSim, MegaDepth, MatrixCity…+内部动态集）。  
+  * 两阶段：224²（100 epoch）→随机分辨率 ≤255k pix（100 epoch）；DINOv2 编码器冻结。  
+  * Adam lr 1e-4 Cosine；动态 batch 64→48；A100×64，bfloat16，约 2×1000 iter/epoch。  
+
+  #### 5. 推理流程  
+  * 完全前馈：N 图 → {(T_i, X_i, C_i)}，57 FPS(Hidden-L, H×W≈255k)。  
+  * 可选 Sim(3) BA 微调，相比 VGGT 仅 1.6 s（因已给初值，无三角化）。  
+
+  ### 效果  
+
+  1. 相机姿态  
+    * RealEstate10K AUC@30 = 85.9（零样本，↑8% 优于 VGGT）。  
+    * Sintel ATE 0.074（VGGT 0.167）；TUM-dyn/ScanNet 持平 VGGT。  
+  2. 点云 (Scale-free)  
+    * DTU Overall ↓1.198 mm（Mean），优于 VGGT(1.338) Fast3R/CUT3R。  
+    * ETH3D Overall ↓0.210 mm（Median 0.128）。  
+    * 7-Scenes sparse 0.048/0.072 (Acc/Comp) ，dense 0.015/0.022，均 SOTA。  
+  3. 视频 / 单目深度  
+    * 视频深度 AbsRel 0.233 (Sintel)、0.038 (KITTI)；帧速 57 FPS。  
+    * 单目深度在四数据集逼近专用模型 MoGe。  
+  4. 鲁棒性  
+    * 将序列首帧换 N 次，DTU/ETH3D 度量 std ≈ 0（VGGT 0.03-0.06）。  
+  5. 可扩展性  
+    * 模型尺寸 S/B/L 提升收敛速度 & 性能（Large 比 baseline 提升45%，收敛 epoch↓）。  
+
+  ### 关键词  
+  Permutation-Equivariant Reference-free 3D Affine-Invariant Camera Scale-Invariant Point Map Alternating Self-Attention Feed-forward Visual Geometry
+
+---
+
+- VGGT: Visual Geometry Grounded Transformer
+*M. C. Jianyuan Wang, Nikita Karaev, Andrea Vedaldi, Christian Rupprecht, David Novotny; CVPR 2025*
+
+  ### 想解决的问题  
+  * 3D 视觉传统依赖 SfM/MVS 等迭代几何优化，流程复杂、耗时长（秒~分钟），且往往每一子任务（相机、深度、点云、跟踪）需要专门模型/后处理。  
+  * 现有端到端网络多专注单一任务（DepthAnything、LRM 等）或只能处理两视图（DUSt3R/MASt3R），难以一次性从任意数量图像直接输出完整 3D 属性。  
+  * 亟需一种统一、前馈、可扩展的大模型作为 3D 视觉通用“骨干”，像 NLP GPT、Vision CLIP/DINO 那样，做到“一次前向→相机+深度+点云+轨迹”，并对下游任务具备强迁移能力。  
+
+  ### 具体做法  
+
+  #### 1. 架构：Visual Geometry Grounded Transformer (VGGT)  
+  1. Patchify：DINOv2 提取 14×14 Patch tokens；每帧再附加 1 个 Camera token + 4 个 Register tokens。  
+  2. Alternating Attention (AA)：  
+    * Frame-wise Self-Attn：仅在单帧内建模局部语义。  
+    * Global Self-Attn：在所有帧 token 间交叉信息。  
+    * 交替堆叠 24 层（总参数 12 亿），无 Cross-Attn、无 3D 归纳偏置，仅依靠大数据学习几何。  
+  3. Token 译码：  
+    * 相机 Head：对 Camera tokens 过 4 层 Self-Attn + FC，输出 q(四元数), t, f 共 9 维。第一帧固定为世界坐标。  
+    * DPT Head：将图像 tokens Upsample 成特征 F_i →  
+      - Depth map D_i（+ aleatoric σ_D）  
+      - Point map P_i（世界坐标，预测冗余但多任务互促）  
+      - Tracking feature T_i（C=128）  
+
+  #### 2. 训练机制  
+  * 数据：汇聚 15+ 数据集（Co3Dv2、ScanNet、MegaDepth、Kubric、OBJaverse 类合成等），室内/室外/合成混合。  
+  * 批次：随机抽 2–24 帧，保证总帧数 48；最大边 518px，Aggressive 颜色增强。  
+  * 损失：  
+    ```
+    L = L_camera + L_depth + L_point + 0.05 L_track
+    ```  
+    * Camera 9 维 Huber；Depth/Point 使用 Aleatoric σ&梯度一致性；Track 用 CoTracker2 双向误差+BCE可见性。  
+  * 归一化：GT 点云以第一帧坐标&平均尺度归一；网络预测不强制归一，使模型学习绝对尺度。  
+  * 优化：AdamW lr 2e-4，160k iter，cosLR；64×A100，bfloat16+Gradient Checkpoint，训练 9 天。  
+
+  #### 3. 推理流程  
+  前向一次即可：  
+  输入 N(1–200) 张图→0.2–9 s；输出 N 组 {相机 g_i, 深度 D_i, 点云 P_i, Track feat T_i}。  
+  若需极致精度，可用 BA 对 g_i / 3D 点做一次性微调（~1.6 s），因 VGGT 已给出高质量初值，不需三角化。  
+
+  ### 效果  
+
+  1. 相机估计  
+    * RealEstate10K AUC@30↑85.3；CO3Dv2 ↑88.2；均超 VGGSfMv2/MASt3R +10~20%。  
+    * BA 微调后 IMC AUC@10 提升至 84.9，夺得 CVPR’24 IMC 榜首。  
+  2. 深度 / 点云  
+    * DTU Overall 0.382（无 GT camera），逼近 GeoMVSNet(0.295, 用 GT camera)。  
+    * ETH3D Chamfer 0.677，明显优于 DUSt3R/MASt3R，并快 30×。  
+  3. 两视图匹配（ScanNet1500）AUC@10 55.2，超 Roma/LoFTR。  
+  4. 动态点跟踪（TAP-Vid RGB-S）微调 CoTracker 后 AJ 提升至 72.1(+4.7)。  
+  5. Novel View Synthesis（GSO，小数据+无输入相机）PSNR 30.4，接近 LVSM(31.7, 需相机)。  
+  6. 速度&扩展：H100 上 100 帧 3.1 s / 21 GB；单张亦支持单视重建。  
+
+  ### 关键词  
+  大型 3D 基座模型；前馈多视几何；Alternating Attention；相机姿态估计；多视深度；稠密点云；3D 点追踪；下游迁移
+
+---
+
+- 4-DOF Visual Servoing of a Robotic Flexible Endoscope With a Predefined-Time Convergent and Noise-Immune Adaptive Neural Network
+*Y. Huang, W. Li, X. Zhang, J. Li, Y. Li, Y. Sun, et al.; IEEE/ASME Transactions on Mechatronics 2024 Vol. 29 Issue 1 Pages 576-587; DOI: 10.1109/tmech.2023.3286850; https://dx.doi.org/10.1109/tmech.2023.3286850*
+
+  ### 想解决的问题  
+  1. 传统内窥镜助手手持操作存在疲劳与误差；现有机器人内窥镜多数只做 2-DOF 视野居中，无法同时调节距离与旋转，导致“视向错位(misorientation)”——器械在画面中角度、尺寸不合适。  
+  2. 内窥镜电缆驱动柔性关节模型不精确（死区、迟滞），加之目标检测易受遮挡、模糊等视觉噪声干扰，常规控制器易发散或产生抖振。  
+  3. 在微创手术场景下还需满足 RCM（穿孔铰点）约束和关节速度/角度物理限幅，传统优化器速度不足，且现有神经网络优化解算缺乏预设时间收敛与抗周期噪声能力。  
+
+
+  ### 具体做法  
+
+  #### 1. 系统硬件与任务  
+  * 10-DOF 机构：KUKA LBR Med 7 机械臂 + 3 电机驱动柔性内窥镜（2 × 弯曲，1 × 轴向旋转）。  
+  * 端镜头 1920×1080@60 Hz，检测四点矩形包围器械尖端。  
+
+  #### 2. 4-DOF 图像特征设计  
+  s = [u_g, v_g, a_n, α]ᵀ  
+  * u_g,v_g：质心坐标 → 控制平移（2-DOF）  
+  * a_n：二阶中心矩 μ20+μ02 归一化 → 控制深度（缩放）  
+  * α：器械长轴方向 → 控制镜头自旋  
+
+  Ji 映射 s˙ = Ji · [c v_c ; ω_cz]，与机械臂 Jacobian Jr 拼成 J_sys。  
+
+  #### 3. 误差学习型滑模控制（EL-SMC）  
+  Sliding surface: s_f = Λ[e_sᵀ, e_rᵀ]ᵀ (e_r 为 RCM 误差 xy)  
+  Reaching law:  
+  ṡ_f = −K_s s_f − Γ f_t(s_f)  
+  * f_t(·)：基于三段模糊隶属 μ₁,μ₂,μ₃ 的平滑切换函数，抑制抖振。  
+  * Γ = diag{|Φ(Z)|}，Φ 由 GRBFNN 在线输出；权值自适应律 ˙Ŵ = −ψ(g s_fᵀ + λ Ŵ)。 → 大误差高增益、稳态小增益。  
+
+  #### 4. 约束运动生成为 QP  
+  min ½‖q̇ + β(q−q₀)‖²_W  
+  s.t.  ΛJ q̇ = K_s s_f+Γ f_t  
+        q̇⁻ ≤ q̇ ≤ q̇⁺ ,  q⁻ ≤ q ≤ q⁺  
+        RCM 侧向速度零化 A_rcm q̇ = 0  
+  → 转为标准 QP: min xᵀWx/2 + ĉᵀx, Ax=b, Cx≤d  
+
+  #### 5. 预定义时间收敛-抗噪自适应零点神经网络 (AZNN)  
+  连续动态：  
+  F ẏ + v̇ = −ϕ_adapt(en) Ψ(en) + N  
+  * en = F y+v 为 KKT 误差，ϕ_adapt = κ₁ + κ₂(1−‖en‖^ι/χ)  
+  * 新激活函数 ϕ_n(x)=p₁ e^{|x|^g}|x|^{1−g}sgn(x)/g + p₂x³ + p₃sgn(x)  
+    - g∈(0,1)，保奇增；保证在 t_p ≤1/(p₁κ₁) 内收敛且对有界周期噪声 Σ 抗扰（Σ≤p₃κ₁）。  
+
+  #### 6. 控制循环  
+  60 Hz 视觉→125 Hz 控制：  
+  1. 检测器给 s, 计算 e_s。  
+  2. EL-SMC 输出等式约束右端。  
+  3. 将 QP 离散化 (τ=8 ms)，AZNN 迭代 k_max=5000 或 ‖e_n‖<1e-3。  
+  4. 得 q̇ 指令→KUKA 1 kHz 速度接口。  
+
+
+  ### 效果  
+
+  1. **控制性能**  
+    * 对比 PID、经典 SMC、平滑 SMC：本方法收敛时间最快（<2 s），稳态无抖振，RCM 误差 <1 mm。  
+  2. **4-DOF vs 2-DOF**  
+    * 追踪手术器械沿 8 字路径 35 s，4-DOF 最终画面旋转误差 <2°；2-DOF 累计旋转 28°，出现视向错位。  
+  3. **鲁棒性**  
+    * 轴杆碰撞、柔性段扰动、目标遮挡三种干扰均快速恢复，系统稳定。  
+  4. **优化求解比较**  
+    * 与 DNN、RNN、GNN、IPM 等：AZNN 计算平均 0.18 ms/loop，误差 5e-4；其他方法>1 ms 或无法收敛。  
+  5. **模拟胸腔猪肺切除**  
+    * 5 块组织切除成功，用时 25 s；FOV 始终稳定，RCM 偏差 <2.5 cm。  
+
+
+
+  ### 关键词  
+  柔性机器人内窥镜；4-DOF 视觉伺服；视向错位；滑模控制；自适应 RBF 神经网络；预设时间收敛；抗周期噪声；二次规划神经解算；RCM 约束
+
+---
+
+- A Simultaneous Polyp and Lumen Detection Framework Toward Autonomous Robotic Colonoscopy
+*Y. L. Wing Yin Ng , Tianle Pan , Yichong Sun, Qi Dou , Pheng Ann Heng , Philip Wai Yan Chiu , and Zheng Li; IEEE TRANSACTIONS ON MEDICAL ROBOTICS AND BIONICS 2024 Vol. 6*
+
+  ### 论文总体脉络与关联性分析  
+  该工作围绕“提升机器人结肠镜自主化”这一核心目标，提出了一个端到端的深度学习框架，用于同时检测腔腔中心 (lumen) 与息肉 (polyp)，并将识别结果闭环驱动磁控柔性结肠镜（EAST）完成自主导航与诊断。论文通过“数据—算法—系统—验证”四层递进设计，建立了从基础数据集构建到体外/离体实验验证的完整链路，可为后续任何面向“视觉感知 + 运动控制”闭环医疗机器人的研究提供参考。  
+
+  #### 1. 想解决的问题  
+  * 传统柔性结肠镜操作困难、病人痛苦，现有机器人结肠镜自治级别普遍偏低。  
+  * 在自治导航和实时诊断两个关键环节，缺乏能同时稳健检测“息肉 + 腔腔中心”的统一视觉感知模块。  
+  * 公开标注的“腔腔中心”数据集几乎为空白，阻碍算法开发；现有图像处理方法需大量人工调参，鲁棒性差。  
+
+  #### 2. 具体做法  
+  **（A）算法层**  
+  1. 数据集构建  
+    * 扩展公开 LDPolypVideo 得到 **Extended-LDVideo**（40,186 张，双标注：息肉 + 腔腔中心）。  
+    * 自制硅胶结肠 **Phantom 数据集**（2,000 张，高分辨率 1280×720），用于实验室场景验证。  
+  2. 检测模型基线  
+    * 评测 5 类主流检测器：Faster-RCNN, RetinaNet, SSD(MobileNet-v2/v3), YOLO-v3, **YOLO-v8**。  
+    * 采用相同训练/评估协议（MMDetection + Pytorch，IoU 0.5-0.95）。  
+  3. 数据混合策略  
+    * 提出 **Supported-to-Intended (SI) Ratio** 概念，系统研究“临床-仿真”数据配比对 mAP 的影响：  
+      - 发现仅 25% 真实数据 + 100% 仿真数据即可把模型性能由“不可用”跃迁到“可用”区间。  
+  4. 最终算法  
+    * 选用 **YOLO-v8 + 自行调优损失权重** 作为统一检测器：  
+      - Extended-LDVideo：mAP 0.841，Recall 0.866，89 FPS。  
+      - Phantom：mAP 0.896，Recall 0.887。  
+
+  **（B）系统/设计层**  
+  1. **EAST 软牵引磁控结肠镜**  
+    * 体外 8 线圈电磁阵列产生 3D 磁场；利用磁偶极模型实时解算牵引力/力矩。  
+  2. 视觉-运动闭环  
+    * YOLO-v8 输出：  
+      - 若检测到息肉 → 置目标为息肉中心，进入诊断/观察模式。  
+      - 否则 → 目标为最近腔腔 haustral fold 中心，进入导航模式。  
+    * 位置误差 → MPC 控制器求解所需磁力 → 电流指令发送至电磁阵列。  
+
+  #### 3. 效果  
+  * **检测精度**：YOLO-v8 在双数据集均获最高 mAP；误检/漏检率显著低于 darkest-region、contour、混合传统算法。  
+  * **鲁棒性**：动态旋转实验（-20°~20°）下腔腔中心 MAE 3.95%，优于 darkest-region (14.38%)，与混合方法(3.10%)接近，但推理速度快 3×。  
+  * **自主导航**  
+    - 硅胶 Phantom：平均像素误差 (u/v) 5.38% / 3.98%，速度 16.3 mm/s，可自动切换“导航→息肉跟踪→导航”。  
+    - 离体猪结肠：平均误差相似，速度 8.17 mm/s。  
+  * **开放资源**：代码与两数据集已在 GitHub 开源，为社区提供首个>4 万张的“息肉+腔”双标注数据。  
+
+  #### 4. 关键词  
+  深度学习；腔腔中心检测；息肉检测；机器人结肠镜；YOLO-v8；Supported-to-Intended Ratio；磁控柔性内镜；自主导航；医疗机器人；数据集构建
+
+---
+
+- Colon Lumen Center Detection Enables Autonomous Navigation of an Electromagnetically Actuated Soft-Tethered Colonoscope
+*W. Y. N. Yehui Li, Yichong Sun, Yisen Huang, Jixiu Li, Philip Wai Yan Chiu, Zheng Li; IEEE TRANSACTIONS ON INSTRUMENTATION AND MEASUREMENT 2024 Vol. 73*
+
+  ### 论文整体关联性与脉络分析  
+  作者围绕“让磁控软牵引结肠镜（EAST）在真实肠腔中自行导航”这一目标，构建了一条完整闭环：  
+  1. **感知层**——提出混合式腔腔中心检测：用改进轻量级深度网络提取结肠褶皱轮廓，再融合暗区中心；解决纯暗区或纯边缘法鲁棒性不足问题。  
+  2. **决策层**——根据像素误差设计模糊‐滑模控制器与自适应速度律，实现带扰动的稳健对准。  
+  3. **执行层**——利用 9 线圈电磁阵列 + 二自由度软体套管，把期望姿态、牵引力转化为最优线圈电流。  
+  4. **验证层**——在商业仿真肠道、离体猪肠、大样本用户实验中，量化“更快、更稳、更轻负”的优势。  
+  这一链路清晰展示了“视觉感知—运动控制—系统实现—临床可行性”的逻辑闭环，可为其它腔镜/软体机器人提供通用模板。
+
+  #### 1. 想解决的问题  
+  * 现有机器人结肠镜导航仍依赖人工操控，过程耗时、负担大。  
+  * 单纯 “最暗区域” 或 “边缘提取” 的腔腔中心估计在照明变化、锐角弯曲等场景下失效，导致早调头或碰壁。  
+  * 缺乏能在真实与模拟环境均稳定工作的自主导航控制策略。  
+
+  #### 2. 具体做法  
+  **算法部分**  
+  1. 数据集与标注  
+    * 自建 600 张 RGB 结肠褶皱轮廓数据集（300 张公开 LDPolypVideo + 300 张医院临床视频），逐像素标注主要褶皱边缘。  
+  2. 轮廓分割网络  
+    * 基于轻量级 **LDC** 编码器，提出 **UpDecoder**：  
+      - 三分支深度可分离卷积 + 级联融合，逐层上采样聚合多尺度边缘特征。  
+      - 输出 640×480 图像实时 46 FPS。  
+  3. 最暗区域检测  
+    * 灰度取反 → 阈值分割（动态阈值 = 0.8×最大灰度）→ 最大连通域 → 计算质心。  
+  4. 最终腔腔中心筛选  
+    * 先按面积 >500 px 过滤噪声边缘；  
+    * 保留包络“暗区质心”的最大边框；  
+    * 若轮廓缺失，则回退使用暗区质心。  
+
+  **系统（设计）部分**  
+  1. **EAST 软牵引结肠镜**  
+    * 9 mm 软管内嵌 13 mm×20 mm 轴向磁钢 + IMU + 3.9 mm 摄像头。  
+    * 工作空间由 9 线圈电磁阵列生成 3D 磁矩与牵引力。  
+  2. 建模  
+    * 2-OR PRB 软体杆模型：关节角 θ₂, θ₃ 描述头端偏转；  
+    * 小孔相机模型建立像素‐姿态雅可比 J；  
+    * 磁偶极模型 + 二次规划求解最小能耗线圈电流。  
+  3. **自主导航控制**  
+    * 滑模面 s=e=[u−u₀, v−v₀]ᵀ；  
+    * 控律：˙θ = J† ẏ(κs + ℘ sat(s))，其中 ℘ 由 Takagi-Sugeno 模糊逻辑自调避免抖振；  
+    * 速度律：χ = (1 − ln(p‖e‖²+1)/ln(p‖e‖²_max+1)) χ_max，实现“误差大减速、误差小提速”。  
+
+  #### 3. 效果  
+  * **轮廓分割性能**：F-score(ODS/OIS) 0.807/0.823，AP 0.826；优于 Canny、HED 等基线，依旧 46 FPS。  
+  * **腔腔中心检测**  
+    - 静态误差：u,v 坐标平均 2.67% / 2.71%，优于暗区法和传统边缘法；  
+    - 动态旋转 (±20°)：归一化 MAE 4.72%。  
+  * **姿态控制**：带气流干扰 1.75 s 收敛，无扰 1.5 s；抖动 <5 px，明显优于纯比例控制。  
+  * **自主导航**  
+    - 仿真肠道 0.6 m：平均 41.6 s 完成；  
+    - 离体猪肠 0.6 m：31.2 s 完成；持续对准误差 <10 px。  
+  * **用户研究（2 新手 + 2 专家）**  
+    - 本方法平均 44.9 s，显著快于手动（CFC/EAST）；  
+    - NASA-TLX 各维度负荷最低，尤其“精神/体力需求”与“挫败感”下降 >50%。  
+
+  #### 4. 关键词  
+  结肠腔中心检测；混合深度学习；UpDecoder；模糊滑模控制；自适应速度；磁控软牵引结肠镜（EAST）；视觉伺服；自主导航；用户负荷评估
+
+
+---
+
+
+- Noise-Consistent Siamese-Diffusion for Medical Image Synthesis and Segmentation
+*Z. G. Kunpeng Qiu, Zhiying Zhou, Mingjie Sun, Yongxin Guo; CVPR 2025 2025; DOI: 10.48550/arxiv.2505.06068; https://dx.doi.org/10.48550/arxiv.2505.06068*
+
+  ### 想解决的问题  
+  1. 医学图像分割依赖大量标注数据，但真实数据昂贵且隐私受限，常用的扩充方案——掩膜先验条件的扩散模型，因训练数据同样稀缺，生成图像形态逼真度（texture / morphology）低，削弱增强效果。  
+  2. 直接加入图像+掩膜双先验虽能提高逼真度，但采样阶段必须提供配对图像，导致多样性差、可扩展性受限，无法真正解决数据匮乏。  
+
+
+
+  ### 具体做法  
+
+  #### 1. Siamese-Diffusion 总体框架  
+  同一扩散 U-Net 在训练时并行执行两条分支：  
+  • Mask-Diffusion：仅以掩膜 y₀ 生成噪声预测 ε_m_θ。  
+  • Image-Diffusion：以图像 x₀ + 掩膜 y₀ 混合先验 (c_mix) 生成 ε_mix_{θ′}。  
+  两分支共享参数（θ′ 为 θ 的深拷贝），引入三种损失共同优化：  
+
+  1) 掩膜去噪损失 L_m = E‖ε_m_θ − ε‖²  
+  2) 图像去噪损失 L_i = E‖ε_mix_{θ′} − ε‖²  
+  3) 噪声一致性损失 L_c = w_c E‖ε_m_θ − sg[ε_mix_{θ′}]‖²  
+    • stop-gradient 使 ε_mix 作为“锚点”在参数空间引导 θ 朝高形态逼真度极小值。  
+
+  在线增强：利用 ε_mix 单步逆扩散 (DDIM like) 得到 z′₀，与 y₀ 重新组合训练 Mask-Diffusion（损失 L_m′，权重 w_a 受迭代/时间步阈值控制）。  
+
+  最终推理阶段仅用 Mask-Diffusion，可接受任意掩膜，兼顾多样性与高保真。  
+
+  #### 2. Dense Hint Input (DHI) + ControlNet 特征提取  
+  原稀疏 HintInput 适合低密度先验。本工作替换为 DHI：5 级残差块（16→256通道）+ Patch Merging，使高密度医学图像与掩膜特征均能有效注入。DHI 与 ControlNet 串联构成外部 HyperNetwork，参数与 U-Net 共同学习。  
+
+  #### 3. 先验混合策略  
+  c_mix = w_i·c_img + w_m·sg[c_mask]，其中 w_i = k/N_iter 逐步增大，前期稳定收敛，后期放大图像先验作用。  
+
+  #### 4. 损失权重与超参  
+  • w_c（IFG指导强度）=1.0 最优，过大/过小都会降低分割提升；  
+  • Online-Aug 阈值 K_τ=N_iter/3，T_τ=200；  
+  • 训练：StableDiffusion-v1.5 冻结 VQ-VAE/Encoder，AdamW lr 1e-5，8×4090 batch=48，50 DDIM steps 采样。  
+
+
+  ### 效果  
+
+  1. 图像质量（Polyps 数据集）  
+    • FID 62.7、KID 0.039、LPIPS 0.586，较 SOTA ArSDM 提升 35 FID；t-SNE 与真实分布几乎重叠。  
+    • 临床专家 MOS 0.587（真实图像 0.9），优于 ControlNet 0.487。  
+
+  2. 分割提升  
+    • Polyps 五测试集平均：SANet mDice↑3.6%、mIoU↑4.4%；Polyp-PVT mDice↑1.1%；CTNet mDice↑0.9%。  
+    • ISIC2018：UNet mDice↑1.52%，SegFormer mIoU↑1.02%；随机形变掩膜多样性进一步提升 0.8~1% 指标。  
+    • 无真实像素场景（Stain/Faeces）Synth 1000 张即可超越真实训练集，显示可扩展性。  
+
+  3. 消融验证  
+    • DHI、Online-Aug、L_c 各自贡献：形态对齐、色彩/纹理、纹理细节。三者协同效果最佳。  
+    • 不同 w_c 实验：0→质量低，多样性好；0.5~1.5 区间性能最优，>2 开始退化。  
+    • 数据量实验：3× 合成数据性能峰值，再增则出现“长尾”下降。  
+
+  ### 关键词  
+  医学图像生成；扩散模型；掩膜先验；Siamese-Diffusion；噪声一致性损失；高形态逼真度；数据扩充；医学分割增强
+
+## [3DGS]
+- EndoVLA: Dual-Phase Vision-Language-ActionModel for Autonomous Tracking in Endoscopy
+*L. B. Chi Kit Ng, Guankun Wang, Yupeng Wang, Huxin Gao, Kun Yuan, Chenhan Jin, Tieyong Zeng, Hongliang Ren; CoRL 2025; DOI: 10.48550/arxiv.2505.15206; https://dx.doi.org/10.48550/arxiv.2505.15206*
+
+  ### 想解决的问题  
+  1. 传统内镜自动跟踪依赖“检测-规划-控制”流水线，需大量人工调参，对光斑反射、组织变形等复杂场景极为脆弱，且难融入医生的高层语义意图。  
+  2. 现有 RL / IL 方法数据需求大、奖励设计繁琐，难以跨任务、跨场景泛化到实际胃肠道动态环境。  
+  3. 通用多模态大模型虽可理解文本与图像，但直接用于内镜机器人存在语义鸿沟，安全/确定性不足。  
+
+
+  ### 具体做法  
+
+  #### 1. 整体框架：EndoVLA  
+  输入：单帧内镜 RGB + 医生语言指令  
+  输出：目标框 [x,y,w,h] 与离散弯曲动作 **At** ∈{UR, UL, LL, LR, Stop} → 两电机增量 Δθ = [±δθ1, ±δθ2]。  
+
+  核心三任务  
+  1. Polyp Tracking (PP) 2. Abnormal-Region 跟踪 (AR) 3. Circular-marker Cutting (CC)  
+
+  #### 2. 双阶段微调 (Dual-phase Fine-Tuning, DFT)  
+  1. SFT (Supervised Fine-tune)  
+    * 基座：Qwen2-VL-7B 冻结视觉编码器（ViT）  
+    * LoRA 适配器（4× r=16）插入 Transformer，MLP projector 将 Ev(Ot) 对齐语言嵌入。  
+    * 损失 = Lbbox(ℓ1 + IoU) + Laction(CE)。  
+  2. RFT (Reinforcement Fine-tune)  
+    * 引入 **Group Relative PPO (GRPO)**，以目标-视图分组稳定更新。  
+    * 可验证奖励：  
+      - IoU 奖励 R₁ = IoU(Bpred,Bgt)  
+      - Motion-Angle 奖励 R₂ = 1 / 0  
+      - 格式奖惩 R₃ = 1 / 0  
+    * 总奖励 R = w₁R₁+w₂R₂+w₃R₃。  
+    * 采样 g=4 组轨迹；裁剪 ε=0.2；KL 惩罚 α=0.01。  
+
+  #### 3. EndoVLA-Motion 数据集  
+  * 6 k 图-语-动作对（400×400, 30 fps），来源：两款胃模型 + Olympus 2-DOF 软内镜机器人。  
+  * 自动 YOLOv5 标注 + 人工清洗；三任务动作分布如表：  
+    ```
+    PP  1053  AR 1130  CC 2833   (训练80%,评估20%)
+    ```  
+  * 三类 prompt  
+    - Ia：直接输出动作  
+    - Ib：输出框+动作  
+    - Id：输出方位描述+动作  
+
+  #### 4. 机器人执行  
+  * Olympus 内镜手柄两旋钮 → 两电机闭环控制，假设弯曲角 α∝θ。  
+  * 控制循环：30 Hz 摄像—> EndoVLA 2 Hz 推理—> 低通补偿映射至 Δθ —> 电机。  
+
+  ### 效果  
+
+  1. **消融**  
+    * SFT vs RFT vs DFT (IoU / Precision)：DFT 提升 PP +38.6 %、AR +64.1 %、CC +340.9 %。  
+  2. **机器人实测 (30 次/任务)**  
+    * PP、AR　成功将目标移入关注圆 FR：63 % / 57 %（Ia），均比单阶段高 >110 %。  
+    * CC　完整沿环割线跟随成功率 10 %，其余方法 0 %。  
+  3. **零样本泛化**  
+    * CORL 字符-图标序列、果蔬序列、户外洞口跟踪：EndoVLA 成功率 50~100 %，RFT 0 %。  
+  4. **基座模型比较**  
+    * 仅 Qwen2-VL 推理：动作精度 <51 %，加入 GT 框亦不足。EndoVLA-DFT 达 95 %+。  
+
+  ### 关键词  
+  内镜机器人；Vision-Language-Action；双阶段微调；可验证奖励强化学习；多模态大模型；连续体机械臂自主跟踪
 
 
 
@@ -670,17 +1147,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-## 6. Large Language Model - 大语言模型<a id="Large_Language_Model"></a>
+## 6. Large Language Model - 大语言模型 <a id="Large_Language_Model"></a>
 
 
 
@@ -696,10 +1163,64 @@
 
 
 
-## 7. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型<a id="Vision_Language_Model/Vision_Language_Action"></a>
+## 7. Vision Language Model/Vision Language Action Model - 视觉-语言模型/视觉-语言-动作模型 <a id="Vision_Language_Model/Vision_Language_Action"></a>
 
-- Learning to Act Anywhere with Task-centric Latent Actions
-*Y. Y. Qingwen Bu, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, and Hongyang Li; Robotics: Science and Systems Conference 2025; DOI: 10.48550/arxiv.2505.06111*
+- π0.5: a Vision-Language-Action Model with Open-World Generalization
+*N. B. Kevin Black, James Darpinian, Karan Dhabalia, Danny Driess, Adnan Esmail, Michael Equi,, N. F. Chelsea Finn, Manuel Y. Galliker, Dibya Ghosh, Lachy Groom, Karol Hausman, Brian Ichter,, T. J. Szymon Jakubczak, Liyiming Ke, Devin LeBlanc, Sergey Levine, Adrian Li-Bell, Mohith Mothukuri,, K. P. Suraj Nair, Allen Z. Ren, Lucy Xiaoyang Shi, Laura Smith, Jost Tobias Springenberg, Kyle Stachowicz and Q. V. James Tanner, Homer Walke, Anna Walling, Haohuan Wang, Lili Yu, Ury Zhilinsky; 2025; DOI: 10.48550/arxiv.2504.16054; https://dx.doi.org/10.48550/arxiv.2504.16054*
+
+  ### 想解决的问题  
+  1. 当前 Vision-Language-Action (VLA) 端到端策略往往只能在采集数据的实验室或少量家庭场景中工作，缺乏“开世界”泛化能力。  
+  2. 单一来源的数据（仅一台机器人、仅低级动作演示等）难以覆盖真实家庭中不同房型、物体类别和长时序任务（10-15 min）的复杂性。  
+  3. 缺少统一框架将多模态网页知识、跨机器人数据、高层语义分解与连续低层控制高效融合。  
+
+  #### 1. 数据与训练配方  
+  A. 数据源异构融合  
+    * MM：400 h 移动机械臂在约 100 套真实住宅收集的清洁、收纳数据  
+    * ME：多地固定机械臂（单/双臂）在真实厨房/卧室采集，弥补机体差异  
+    * CE：实验室跨机体数据集（含公开 OXE）覆盖折衣、扫桌等丰富动作  
+    * HL：为上述机器人数据人工标注子任务文本（如“pick up plate”）与目标物框  
+    * WD：网页图像-文本任务（caption、VQA、检测）≈97 % 预训练样本  
+    * VI：专家用自然语言逐步指挥机器人完成任务的“语言演示”  
+
+  B. 双阶段协同训练  
+    1) 预训练阶段  
+        • 所有动作先经 FAST 压缩成离散 token，与图像 patch、文本指令统一序列 → 标准自回归 Transformer 训练（280 k 步）。  
+    2) 后训练阶段  
+        • 引入 Flow-Matching 动作专家（300 M 参数）输出连续 50-step action chunk；  
+        • 统一损失  
+          L = CE(token) + α‖ω – a – f_FM(·)‖², α=10  
+        • 仅用与移动操控最相关的 MM+ME+HL+VI+WD 再训练 80 k 步，实现高频推理 (50 Hz)。  
+
+  #### 2. 模型架构  
+  1. 主干 VLM：SigLIP-400 M 图像编码 + Gemma-2 B 语言解码。  
+  2. 多模态序列设计  
+    * 输入：图像 patch ×4 视角 + 机器人 proprio 量化 token + 任务 prompt  
+    * 输出：①高层子任务文本 token ˆℓ；②动作专家生成连续 aₜ:ₜ₊₄₉  
+  3. 注意力遮罩  
+    * 图像/文本可双向；FAST 动作仅看 prefix；动作专家 tokens 仅看 prefix & 内部互看，避免信息泄漏。  
+
+  #### 3. 层级推理流程  
+  1. 高层推理（1 Hz）：π(ˆℓ | o,ℓ)  → 预测下一语义子任务 & 相关物体框  
+  2. 低层推理（50 Hz）：π(aₜ:ₜ₊₄₉ | o,ˆℓ) → Flow-Matching 迭代 10 步求动作 chunk  
+  3. 直接用 PD 控制跟踪：两臂 6 DoF+夹爪+升降+全向底盘，共 18/19 DoF，无额外规划。  
+
+
+  ### 效果  
+  1. **跨域泛化**：在 3 套未见过的真实住宅中，指令“clean kitchen/bedroom”一次执行 10–15 min，多阶段成功率 ≈80 %，可自动关柜门、擦台面、放碗盘、整理床铺等。  
+  2. **规模实验**：训练住宅数从 3→104，四任务平均得分线性提升；104 套模型≈等同在测试屋直接训练的 “in-domain” 基线。  
+  3. **消融验证**  
+    * 去掉 ME 或 CE → 成功率降 10–25 %；同时移除两者降至 40 % 以下。  
+    * 去掉 WD，语言挑物任务在 OOD 物体上成功率由 62 %→38 %。  
+    * 去掉 VI，高层推理失配，长任务成功率降低 ≈15 %。  
+  4. **对比**  
+    * π0-FAST+Flow：仅动作数据训练，平均 57 %；  
+    * π0 原版：46 %；  
+    * π0.5：75 %。  
+  5. **速度**：VLM+动作专家推理 50 Hz，端到端无规划。  
+
+
+  ### 关键词  
+  开世界泛化；多模态协同训练；Vision-Language-Action (VLA)；高层子任务预测；Flow-Matching 动作专家；FAST Tokenizer；跨机体学习；家庭移动操作；长时序任务
 
 ---
 
@@ -770,8 +1291,129 @@
 
 ---
 
-- Learning to Act Anywhere with Task-centric Latent Actions
-*Y. Y. Qingwen Bu, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, and Hongyang Li; Robotics: Science and Systems Conference 2025; DOI: 10.48550/arxiv.2505.06111*
+- Surgical Action Planning with Large Language Models
+*Z. H. Mengya Xu, Jie Zhang, Xiaofan Zhang, and Qi Dou; ArXiv 2025; DOI: 10.48550/arxiv.2503.18296; https://dx.doi.org/10.48550/arxiv.2503.18296*
+
+  ### 想解决的问题  
+  * 机器人辅助手术（RMIS）现有智能模型多做事后分析（阶段/器械识别等），缺乏“面向未来”的术中预测与决策支持。  
+  * 手术动作规划（SAP）需根据实时视频和手术目标生成下一步乃至长时序动作链，挑战包括：  
+    1. 复杂器械-组织交互理解与时序依赖。  
+    2. 大模型无法直接处理长视觉历史，导致上下文丢失。  
+    3. 医疗数据隐私与标注匮乏，使得端到端微调成本高。  
+
+
+  ### 具体做法  
+
+  #### 1. LLM-SAP 框架  
+  ```
+  视觉历史 H = {v1…vt} + 目标描述 G
+          ↓  Near-History Focus Memory (NHFM)
+            ├─ DirNHFM: VLM 直接处理近帧 ⟨vt,at⟩ + 远程动作序列 {ai}
+            └─ IndirNHFM: VLM 先产生日志 caption Ct → 供纯 LLM 使用
+          ↓  Prompts Factory 生成两类提示
+            · DCPrompts：帧级结构化描述
+            · APPrompts：基于知识库的“进展评估+安全考量+三步动作排序”请求
+          ↓  LLM / VLM-LLM 解码
+  输出：下一动作预测 at+1 及可解释文本
+  ```
+
+  #### 2. 近历史聚焦记忆模块 (NHF-MM)  
+  * 远程历史：仅用动作标签压缩表示，防止长序列干扰。  
+  * 近历史：包含当前关键帧图像/描述 + 最近动作，提供细粒度上下文。  
+
+  #### 3. 双模态适配  
+  * **DirNHFM**：Qwen2-VL 72B 等多模态大模型，直接输入图像。  
+  * **IndirNHFM**：普通 LLM（Qwen2.5 32B/72B）只能吃文本，因此先由 VLM 生成 Ct。  
+
+  #### 4. Prompt Engineering  
+  * **知识库**：手术流程、操作原则、安全守则、动作描述四大块嵌入。  
+  * **APPrompts**：要求模型输出  
+    1) Progress Assessment  
+    2) Safety Considerations  
+    3) Ready-to-Execute Actions（排序+理由）。  
+
+  #### 5. 微调策略  
+  * 零样本评估：直接提示工程。  
+  * SFT+LoRA：用 GPT-4o 蒸馏生成 118 例高质量对话，8×A800   lr 1e-4, epoch 50。  
+
+  #### 6. 数据集与指标  
+  * **CholecT50-SAP**：自建，50 例 LC 视频 → 225 样本（5 类动作）。  
+  * 指标  
+    - SLAcc / VLAcc（Top-k）。  
+    - **Relaxed Accuracy** (ReAcc)：预测在当前或下一帧出现即算正确，更贴合手术动态。  
+
+
+  ### 效果  
+  1. **零样本**  
+    * Qwen2.5-72B (IndirNHFM) Top-1 SLAcc 45.6%，比 Qwen2-VL 提高 5.3%。  
+  2. **监督微调**  
+    * Qwen2.5-32B-SFT 标准 Top-2 SLAcc 78.9%，比未调优版提升 19.3%，ReAcc Top-2 达 95.3%。  
+  3. **记忆策略消融**  
+    * 仅近帧 vs. 近帧+远程动作：后者 Top-1 SLAcc 提升 ~7%。  
+  4. 框架可输出“进展评估+安全建议+动作排序”文本，适用术前教学、术中导航、术后分析等场景。  
+
+
+  ### 关键词  
+  手术动作规划；大型语言模型；视觉语言模型；近历史记忆；Prompt 工程；LoRA 微调；零样本推理；Relaxed Accuracy
+
+
+---
+
+- Multimodal Robotic Surgical Instrument Transfer and Sorting Platform: Scrub Nurse Robot
+*Y. H. Wing Yin Ng, Ke Xie, Philip Wai Yan Chiu, and Zheng Li; IEEE International Conference on Robotics and Biomimetics 2024*
+
+  ### 想解决的问题  
+  1. 手术器械的术中递送与术后整理高度重复、劳动强度大，易因疲劳导致数目记录或递拿错误。  
+  2. 器械锐利且常带血污，人工反复抓握存在职业伤害风险。  
+  3. 现有机器人方案多依赖条码、预设模板或固定摆位，遇到血污遮挡、姿态变化、器械交叠即失效；且缺乏与外科医生自然交互（语音）的完整闭环。  
+
+  ### 具体做法  
+
+  #### 1. 数据集构建  
+  * **MIS-Instrument-Ex-vivo 数据集**  
+    * 9 类、共 13 型胸腔镜器械，1 037 张 640×480 RGB 图。  
+    * 标注：  
+      * Oriented Bounding Box（OBB）：长边平行器械轴线，提供精确朝向。  
+      * Occlusion 标签：Top / Bottom（被遮挡层次）。  
+    * 两级子集：原图+OBB 用于检测；裁剪图+遮挡标签用于分类。  
+
+  #### 2. 视觉双阶段模型  
+  1. **器械检测与姿态**  
+    * **YOLOv7-OBB**（改进头部及损失函数）  
+      * 输出 7 维：xc, yc, L_long, L_short, confidence, class_obj, class_angle(0-179)。  
+      * 损失 = 物体类别 + 角度分类 + OBB 回归 + OBB IoU 置信度。  
+      * 结果：Precision 95.6%，Recall 97.4%，优于 YOLOv5-OBB（+9.2% AR）。  
+  2. **遮挡推理**  
+    * ResNet-50 二分类（Top/Bottom），输入为 OBB 裁剪后旋正 224×224 图。  
+    * 数据增强：翻转、旋转、mosaic、mixup。  
+    * 准确率 92%。  
+
+  #### 3. 语音理解与人机交互  
+  * **Silero ASR** 将外科口语转为指令，如 “Give me the stapler”。  
+  * 预设词典映射至器械类别。  
+
+  #### 4. 机器人系统集成  
+  * **硬件**  
+    * Franka Emika 7-DOF 机械臂（1 kHz 速度接口）  
+    * 气动抓手 + 自研仿生指甲  
+    * Intel RealSense D435i RGB-D 相机  
+  * **坐标标定与运动**  
+    * EasyHandEye 校准得到  ^{0}T_{c} ，抓取点取 OBB 中点，深度取 9 像素均值+5 帧平滑。  
+    * MoveIt 规划笛卡尔路径，抓手气压经 Arduino 控制。  
+  * **任务逻辑**  
+    1. 视觉检测 → 器械列表{type, pose, depth, occ}.  
+    2. 语音命令匹配目标器械。  
+    3. 若目标为 Bottom，则先递归移除其上层 Top 器械。  
+    4. 机械臂执行抓取、递送、返回。  
+    * 伪代码见 Algorithm 1（文中）。  
+
+  ### 效果  
+  * 视觉：YOLOv7-OBB 在自建数据集上 mAP95.6%，ResNet-50 遮挡分类 92%。  
+  * 物理实验：机器人可在多器械交叠、任意朝向情况下，按照语音指令自动选取可抓取目标并正确递送给外科医生。  
+  * 视频展示证明平台鲁棒性与实时性（RGBD 30 Hz，整链响应 <2 s）。  
+
+  ### 关键词  
+  手术器械递送；机器人洗手护士；多模态人机交互；OBB 检测；遮挡推理；语音-视觉融合；Franka 机械臂
 
 
 
@@ -786,7 +1428,137 @@
 
 
 
-## 8. Agent - 智能体<a id="Agent"></a>
+
+
+
+
+
+
+
+
+## 8. Agent - 智能体 <a id="Agent"></a>
+
+- RoboOS: A Hierarchical Embodied Framework for Cross-Embodiment and Multi-Agent Collaboration
+*H. Tan, X. H. , C. C. , M. L. , Yaoxu Lyu, M. Cao, D. L. , et al.; 2025; DOI: 10.48550/arxiv.2505.03673; https://dx.doi.org/10.48550/arxiv.2505.03673*
+
+  ### 想解决的问题  
+  * 现有端到端 VLA 或分层 VLA 系统主要面向单机器人，存在：  
+    1. 跨机体（single-arm / dual-arm / wheeled / humanoid）迁移困难，重复训练昂贵；  
+    2. 多机器人并行协作缺乏统一调度与实时共享记忆，长任务易出错；  
+    3. 仅靠单一模型难以同时满足“高层认知规划 + 低层毫秒级执行”的时延要求；  
+    4. 边-云协同与大模型推理成本高，缺少可扩展部署框架。  
+
+
+  ### 具体做法  
+
+  #### 1. 整体架构：Brain-Cerebellum 双层  
+  1. Embodied Brain Model（RoboBrain-1.5-OS，云端）  
+  * 基座：Qwen2.5-VL-7B → 三阶段增量训练  
+      - Stage-1：3M 通用 VLM 数据，奠定视觉-语言基础  
+      - Stage-2：2.3M 机器人规划/指点/可承载区域/轨迹四大能力数据  
+      - Stage-3：RoboOS-Enhanced 数据：  
+        · Multi-Robot-45k（场景图+多机器人工作流）  
+        · Robotic-Agent-144k（正负 Observation-Action 对，支持 RL GRPO）  
+  * 产出：  
+      - 多机器人任务分解 & DAG 工作流生成  
+      - Agent-Tool 调用序列  
+      - 持续三层反馈（执行-感知-记忆）纠错  
+
+  2. Cerebellum Skill Library（边端）  
+  * Manipulation：  
+      - VLA-tools：OpenVLA、RDT-1B、π0、Octo  
+      - Expert-tools：经典抓取/可承载抓取、接触力控制  
+  * Navigation：SLAM、MapNav、VLN-based  
+  * Specialized：接触丰富、变形物、灵巧手等  
+    * 标准化 Robot Profile，支持 plug-and-play；每个子技能通过 gRPC/WebSocket 暴露，使 Brain 可动态装载。  
+
+  3. Real-Time Shared Memory（Redis+SceneGraph）  
+    * Spatial：层级场景图（楼层-房间-对象）SAM+CLIP 聚合；维护拓扑/支持查询与更新  
+    * Temporal：任务历史、Tool 调用反馈、异常日志  
+    * Robotic：各机器人运动域、关节状态、电量；支持负载均衡、故障预测  
+    * 发布-订阅 <1 ms 延迟，实现多机体状态同步  
+
+  #### 2. 工作流管线  
+  Step-1 全局任务解析 → Brain 调用 RAG(场景记忆+说明) 生成 reasoning trace R 与 subtask graph G  
+  Step-2 Monitor 根据 DAG 深度并结合机器状态并行/串行分派 (d, robot_id)  
+  Step-3 每个 Subtask 生成 Agent，按观察-工具序列闭环执行，失败时自恢复（基于记忆）  
+  Step-4 Shared Memory 增量更新场景/反馈/机器人记忆，触发 Brain 再规划  
+
+  #### 3. 边-云推理优化（FlagScale 框架）  
+  * Zero-3 并行 + Tensor Parallel；FP16、W8A16 量化  
+  * RTX4090 单卡低层推理 7 ms；云端多 A800 集群推理 20 ms 级  
+  * 双向心跳与镜像缓存，保证>50 Hz 机器人控制环  
+
+  ### 效果  
+  1. Embodied 能力基准（表 1）：  
+    * 多机器人规划 AR 提升 28%（对比 Qwen2.5-VL），超越 DeepSeek-V3-685B 5.5%  
+    * Affordance mAP 提升 16.9%，Trajectory 误差 DFD / HD / RMSE 分别降 40%+  
+  2. 三场景真实验证  
+    * 餐厅：Unitree Humanoid + AgileX 双臂 制作并上菜；  
+    * 住宅：RealMan 单臂 + AgileX 双臂 递送水果刀与橙子；  
+    * 超市：双臂开礼袋、单臂挑礼物，多机器人并行完成 >10 子任务，零死锁。  
+  3. 性能  
+    * Redis 共享内存同步 <1 ms；多 GPU FP16 推理批量加速 48–63%  
+    * 任务并发管理多 DAG，动态调度可支持 >20 机器人实例  
+
+  ### 关键词  
+  跨机体协作；Brain-Cerebellum 分层；多机器人任务分解；实时共享记忆；RoboBrain-1.5-OS；Cerebellum Skill Library；FlagScale 边-云推理；Multi-Robot-45k；Agent-Based Tool Invocation
+
+---
+
+- Hi Robot: Open-Ended Instruction Following with Hierarchical Vision-Language-Action Models
+*B. I. Lucy Xiaoyang Shi, Michael Equi, Liyiming Ke, Karl Pertsch, Quan Vuong, James Tanner, Anna Walling, Haohuan Wang, Niccolo Fusai, Adrian Li-Bell, Danny Driess, Lachy Groom, Sergey Levine, Chelsea Finn, Lachy Groom, Sergey Levine, Chelsea Finn; ICML 2025 2025*
+
+  ### 想解决的问题  
+  1. 机器人在真实开放环境中需处理长时序、多步骤任务，但现有 VLA 端到端策略只能解析简单原子指令，无法理解“复合提示+实时纠正”这类人机互动。  
+  2. 直接依赖大型通用 VLM/LLM（如 GPT-4o）缺少对机器人可行动作的物理 grounding，容易生成不可执行或与场景不符的指令。  
+  3. 缺乏一种能够在**高层语义推理**与**低层物理控制**间无缝衔接、同时可大规模自动化构造训练数据的框架。  
+
+
+  ### 具体做法  
+
+  #### A. 分层架构  
+  1. 高层策略 (System-2)：基于 PaliGemma-3B 微调的 VLM  
+    • 输入：多视角 RGB 图像 + 用户自然语言（含反馈）  
+    • 输出：a) 机器人回应文本 *uₜ*（语音播报） b) 低层可执行原子指令 *ĉₜ*（如 “pick up bowl”）。  
+  2. 低层策略 (System-1)：采用 π0 Vision-Language-Action (VLA)  
+    • 以 *ĉₜ*、图像、机器人关节状态为条件，Flow-Matching 动作专家连续生成 50-step action chunk（50 Hz），直接驱动 6-DoF 单/双臂 + 移动底盘。  
+  3. 推理频率  
+    • 高层 1 Hz（或检测到新语音立即触发）；低层 50 Hz。  
+
+  #### B. 数据与训练  
+  1. 实演数据 D_demo：人工遥操作收集，按技能切分并粗标原子指令。  
+  2. **合成交互数据 D_syn**（核心创新）  
+    • 用大 VLM 作为 *Data-Generator*：给定当前图像 + 技能标签 → 生成可能的用户提示 ℓₜ、机器人回应 uₜ，实现“虚拟人机对话”。  
+    • 覆盖场景分类：否定约束、实时纠正、偏好约束、任务拆分等。  
+  3. 训练流程  
+    ① 高层：在 D_labeled∪D_syn 上做 next-token 交叉熵训练，学习 p_hi(ĉₜ,uₜ | I,ℓ)。  
+    ② 低层：在 D_demo∪D_labeled 上用 FAST 离散 token 预训练，再引入 Flow-Matching 动作专家微调。  
+
+  #### C. 系统集成  
+  • 语音接口：Whisper large-v2 本地转写 + TTS 输出。  
+  • GPU 推理：RTX 4090 单卡高层 60 ms、低层单步 7 ms（10 步并行），满足实时。  
+  • 平台：UR5e 单臂、双臂 ARX、移动 ARX（三种 DoF: 7/14/16）。  
+
+  ### 效果  
+  1. 三大任务场景  
+    • Table Bussing：根据提示仅清理垃圾/仅收餐具/仅黄色物体，并处理中途“那不是垃圾”等口头纠正。  
+    • Sandwich Making：遵循“无番茄”“乳糖不耐”等复杂夹层组合与实时补充/取消配料。  
+    • Grocery Shopping：移动双臂抓取多件零食饮料入篮并搬运。  
+  2. 定量指标（20 trial/任务）  
+    • Instruction Accuracy 提示对齐率：Hi Robot 77%，GPT-4o 33%，Flat VLA 31%。  
+    • Task Progress 任务完成度：Hi Robot 平均 68%，GPT-4o 29%，Flat VLA 25%。  
+  3. 消融  
+    • 去掉合成数据 → 指令对齐下降 39%，无法处理用户偏好与纠正。  
+    • Flat VLA +合成数据 → 无层次仍比 Hi Robot 低 19%，说明推理层级的重要性。  
+  4. 人类高层 Oracle 上限 78%/72%，Hi Robot 已逼近。  
+  5. 推理示例：GPT-4o 出现 “pick up bermuda triangle”等幻觉；Hi Robot 能识别被抓住的碗非垃圾并放回。  
+
+
+  ### 关键词  
+  层次化 Vision-Language-Action；高层语义推理；低层 Flow-Matching 控制；合成语言交互数据；实时用户纠正；开放场景指令跟随；PaliGemma；π0 VLA；人机协作
+
+---
 
 - CLEA: Closed-Loop Embodied Agent for Enhancing Task Execution in Dynamic Environments 
 *Mingcong Lei, G. W., Yiming Zhao, Zhixin Mai, Qing Zhao, Yao Guo, Zhen Li, Shuguang Cui, Yatong Han, and Jinke Ren; IEEE International Conference on Robotics and Automation 2025; DOI: 10.48550/arxiv.2503.00729*
@@ -867,6 +1639,148 @@
 
   - 闭环规划评估架构, 大型语言模型（LLM）, 视觉语言模型（VLM）, 部分可观测马尔可夫决策过程（POMDP）, 机器人任务执行, 动态环境, 多机器人协作, 计划-执行-评估循环, 环境记忆与置信状态, 开源模型应用
 
+---
+
+- RoboMemory: A Brain-inspired Multi-memory Agentic Framework for Lifelong Learning in Physical Embodied Systems
+*M. Lei, H. C. , B. Q. , Zezhou Cui, Liangchen Tan, J. Hong, G. H. , Shuangyu Zhu, Yimou Wu, S. J. , Ge Wang, et al.; 2025*
+
+  ### 想解决的问题  
+  1. 当今基于 VLM/LLM 的 embodied-agent 往往聚焦单任务或短时操作，缺乏跨任务、跨场景的“终身学习”能力。  
+  2. 现有记忆框架要么过于简化（仅短期缓存），要么多模块串行导致推理延迟高，难以在真实机器人中落地。  
+  3. 长时规划中的死循环、动作失配等问题缺少一套“规划-执行-记忆”闭环机制来检测并自愈。  
+
+  ### 具体做法  
+
+  #### 1. 整体脑启发式架构  
+  ```
+  信息预处理(丘脑)  →  终身记忆系统(海马)  →  规划/批判器(前额叶)  →  低层执行(小脑+VL A)
+          │                         ↑↓(并行RAG)           │
+          └──视频/语音/触觉→ 文本摘要、查询           行动反馈 → Critic
+  ```
+
+  #### 2. 三层多模态记忆体系  
+  A. 工作记忆（Working）: action 级别 FIFO 缓冲，保存最近 N 步摘要。  
+  B. 短期记忆（STM, Mixed）: 任务过程中持续更新的时空图 + 失败/成功标签。  
+  C. 长期记忆（LTM, Task level）:  
+    • Spatial–KG：动态检索式增量更新算法  
+      - 采用 K-hop 子图检索 + 局部冲突检测合并，复杂度 O(D·K)；理论界定见定理1/2。  
+    • Temporal：FIFO+摘要压缩，保留行动序列。  
+    • Episodic：任务级交互日志。  
+    • Semantic：动作-结果经验向量库，用作技能评估。  
+
+  #### 3. 统一“并行更新/检索”范式  
+  四子模块共享：`Update(new_info) → Retrieve(query)` 接口；并行执行避免级联延迟。  
+  RAG 检索策略：  
+  ```
+  K' = embed(指令+初始场景) → Top-k 经验 → Planner prompt
+  ```
+
+  #### 4. Planner–Critic 闭环  
+  1. Planner(VLM) 输出多步计划。  
+  2. Critic 在每步执行前评估场景/记忆，若不一致则触发重规划；为避免死循环，首次动作不经 Critic。  
+  3. 行动通过 π0 或 LoRA-fine-tuned VLA 转为连续控制；失败反馈写入 STM→LTM。  
+
+  #### 5. 执行层与硬件适配  
+  * 模拟：EB-ALFRED/Habitat 使用高层 API。  
+  * 真实：Mobile-ALOHA 双臂 + SLAM；自采 1,040 episode LoRA 微调 π0，支持 pick/place/nav/open 等十类高层指令。  
+
+  ### 效果  
+
+  1. **基准测试**  
+    * EB-ALFRED(Base+Long, 100 任务)：  
+      - RoboMemory(Qwen2.5-VL-72B) SR 67% / GC 78.4%  
+      - 高出开源底座(+25%)，超越闭源 Claude-3.5 Sonnet 5%。  
+    * EB-Habitat：平均 SR 提升 24%，GC 提升 12%。  
+
+  2. **消融**  
+    * 去 critic → SR-12%  
+    * 去 Spatial KG → SR-20%  
+    * 去 LTM → Long 集合 SR-18%  
+
+  3. **真实厨房 15 任务两轮试验**  
+    * 第一次平均成功 46%；记忆保留后第二轮升至 73%，证明终身学习能力。  
+
+  4. **效率**  
+    * 并行 KG 更新仅处理相关子图，推理延迟控制在 <100 ms；整体系统可 10 Hz 闭环。  
+
+  ### 关键词  
+  终身学习；多模态记忆；动态知识图谱；Planner-Critic 闭环；RAG 检索；跨任务泛化；机器人多记忆框架；VLA 执行；EmbodiedBench
+
+---
+
+- Experience is the Best Teacher: Grounding VLMs for Robotics through Self-Generated Memory
+*K. Q. Guowei Lan, Rene Zurbr ´ ugg ¨, Changan Chen, Christopher E. Mower, Haitham Bou-Ammar, Marco Hutter; 2025; DOI: 10.48550/arxiv.2507.16713; https://dx.doi.org/10.48550/arxiv.2507.16713*
+
+  ### 想解决的问题  
+  * 现有视觉语言模型（VLM）虽能进行机器人任务规划，但因仅在互联网数据上训练，**不了解具体机器人自身能力与局限**，导致在真实场景中常输出不可执行或高失败率的计划。  
+  * 纯靠人工标注或外部监督对不同机器人做“能力对齐”代价高、效率低。  
+  * 缺乏一种能让机器人**自主生成经验、反思失败并将经验固化为长期记忆**的方法，从而持续提升跨任务、跨场景的成功率。  
+
+
+  ### 具体做法  
+
+  #### 1. 框架总览 EXPTEACH  
+  ```
+  用户指令 I + 初始观测 o0
+          │
+    场景描述器(同VLM) → 场景Key K'
+          │
+    RAG检索长期记忆LTMs {Ki,Ei}
+          │
+  短期记忆STM m  ← 反思反馈
+          │
+        任务规划器 T (VLM) ——→ 动作 at
+                                │
+                        机器人执行
+                                │
+                    新观测 ot+1 → 成功检测器 D (同VLM)
+  ```
+
+  #### 2. 核心组件  
+  1. **VLM 双角色**  
+    * Planner `T`：根据 I、当前图像、STM、检索到的 LTM 生成下一动作（函数调用格式），支持 pick/place/push，并可触发“图像标注工具”。  
+    * Detector `D`：执行后评估成功与否，返回 scene 描述、成功状态、失败原因、下一步建议。  
+    ✔ 使用同一个 GPT-4o 级别 VLM 权重，减少模型切换。
+
+  2. **Short-Term Memory (STM)**  
+    * 格式：`m = {(aτ , rτ+1)}_{τ=0}^{t-1}`。  
+    * 作用：  
+      - 记录 **动作-反馈链**，提供反思信息。  
+      - 失败时可触发**交互式重规划**（如先移除障碍物、使用替代工具）。  
+    * 体现：20 s 任务内反复调用；人类只在场景被破坏时重置环境。  
+
+  3. **Long-Term Memory (LTM)**  
+    * 生成：任务完成后由 **Experience Summarizer** 将 STM 摘要化为 `(Key, Experience)` 并存储。  
+      - Key = 场景描述器生成的“指令 + 初始场景”文本。  
+    * 检索：新任务时用 `text-embedding-3-large` 生成向量，**RAG** 取余弦相似度 Top-k 经验，送入 Planner 作为上下文。  
+    * 规模：实验共 100 条（96 条简单任务 + 4 条复杂任务生成）。  
+
+  4. **On-Demand 图像标注工具**  
+    * 触发条件：Planner 判断 grasp/place/push 需精准位置或特定抓取部位 → 请求标注。  
+    * 流程：Grounded-SAM 对目标生成 mask →   FPS 或可视编号标注 → VLM 选取最佳区域。  
+    * grasp 再经过 AnyGrasp + IK 过滤，最终以 `g* = argmax s_conf · s_loc` 输出抓姿。  
+
+  ### 效果  
+  1. **短期记忆 + 反思**  
+    * 4 个高难度操控任务（每任务 5-10 trial，允许 2 次尝试）：平均成功率由 36% → **84%**。  
+    * 出现“创意工具使用”：用海绵推糖果、用推方式搬 fragile egg 等。  
+
+  2. **长期记忆 Grounding**  
+    * 12 个场景（含 8 个未见过）一次尝试成功率从 22% → **80%**。  
+    * 指令“Pick up milk carton (apple on top)”立即检索到“先移走顶上物再取容器”的经验，一次成功。  
+
+  3. **检索策略消融**  
+    * Random-k 记忆：27%  
+    * 全量 LTM：67%（噪声干扰）  
+    * **RAG Top-k：89%**  
+
+  4. **图像标注消融**  
+    * 需特定抓取部位的 7 类物体 grasp 成功率平均提高 30-60%；  
+    * 6 类 push 任务到目标误差平均减少 25-40%。  
+
+
+  ### 关键词  
+  自生成记忆；短期记忆反思；长期记忆检索；RAG 机器人对齐；VLM 任务规划；图像标注 Grounded-SAM；工具使用涌现；跨场景泛化
 
 
 
@@ -878,10 +1792,247 @@
 
 
 
+## 9. Medical Robot(Surgical robot) - 医疗和手术相关机器人 <a id="Medical_Robot"></a>
 
-## 9. Medical Robot(Surgical robot) - 医疗和手术相关机器人<a id="Medical_Robot"></a>
+- Real-Time Pose Detection for Magnetic Medical Devices
+*M. B. Christian Di Natali, and Pietro Valdastri; IEEE TRANSACTIONS ON MAGNETICS 2013 Vol. 49*
+
+  ### 想解决的问题  
+  * 为实现永磁体磁驱胶囊内镜的闭环控制，必须实时获得胶囊 6 DOF 位姿。  
+  * 现有常用定位技术（电磁跟踪、光学、交变磁场三角定位等）在强永磁场下易受干扰或仅能输出 3 DOF，无法满足磁驱操作要求。  
+  * 需要一种可在强静磁场中工作的、尺寸与功耗均可嵌入胶囊的实时 6 DOF 定位方法。  
+
+  ### 具体做法  
+
+  #### 1. 传感硬件与布局  
+  1. 胶囊内部磁体：NdFeB，φ 11 mm × 11 mm，轴向充磁。  
+  2. 传感器  
+    * 6 × 单轴 Hall（CYP15A，量程 0.1–2 T）——在胶囊两端沿 轴对称布置，形成两个三轴磁场测点 B₁、B₂，基线距 12 mm。  
+    * 1 × 三轴加速度计（LIS331DLH）——实时给出俯仰 θ、偏航 φ。  
+  3. 数据采集：16 bit DAQ 6211（20 kS/s）；方案可替换为 CC2530 + ADS8320 以实现体内无线采集。  
+
+  #### 2. 磁场数值地图（离线）  
+  * 外永磁体（EPM）：NdFeB N52，φ 50 mm × 50 mm，轴向充磁。  
+  * 使用磁流模型 (Magnetic Current Model) 对 EPM 求解，推导圆柱坐标闭式积分式：  
+    \( \mathbf{B}(\rho,z)=\mathbf{\hat\rho}B_\rho(\rho,z)+\mathbf{\hat z}B_z(\rho,z) \) ，详见式(4)。  
+  * 在 30 cm × 30 cm × 30 cm 工作区离散 0.2 mm 网格；利用轴对称性仅保留 y–z 平面 15 cm × 15 cm 切片，显著减小存储。  
+
+  #### 3. 实时迭代算法（Matlab 实现）  
+  1. **初始标定**：将胶囊放在已知姿态下测一次得到 roll₀ 作为基准（俯仰/偏航由加速度直接得出）。  
+  2. **坐标转换**  
+    * 取得两组磁场测量 \( \mathbf{B}_1,\mathbf{B}_2 \)。  
+    * 按当前俯仰 θ、偏航 φ、迭代得到的滚转 ψ，构造旋转矩阵  
+      \( R_{w}^{c}=R_z(ψ)\,R_y(θ)\,R_x(φ) \) ，将传感器数据旋转到世界坐标，再用机器人正解得到与 EPM 座标系 \(\{E\}\) 的关系：  
+      \( \mathbf{B}_i^{E} = R_{W}^{E} R_{w}^{c} \mathbf{B}_i \)。  
+  3. **地图检索**  
+    * 对每个 \( \mathbf{B}_i^{E} \) 转为圆柱坐标分量 \( (B_\rho,B_z) \)。  
+    * 顺序遍历磁场切片查找最近邻点，得到对应位置向量 \( \mathbf{p}_i \)。  
+  4. **位姿求解**  
+    * 位置：胶囊中心 \( \mathbf{p}_c = (\mathbf{p}_1+\mathbf{p}_2)/2 \)。  
+    * 滚转：计算 \( \mathbf{p}_1,\mathbf{p}_2 \) 在 x–y 平面的连线与 x 轴夹角。  
+  5. **迭代更新**：用新 ψ 进入下一循环；采样周期 20 ms（运算 14 ms + 搜索 5 ms）。  
+
+  #### 4. 实验平台  
+  * RV-6SDL 六轴机械臂搬运 EPM；胶囊固定在三自由度万向架（不限制姿态）；Micron Tracker 光学系统提供旋转真值(0.3°)。  
+  * 在 EPM 上方 10–15 cm、30 cm × 30 cm 平面，多层 z 方向扫描验证。  
+
+  ### 效果  
+
+  1. **定位精度（均值 ± σ）**  
+    * 当胶囊–EPM 距离 ≤ 10 cm：  
+      * 位置误差：x 1.4 ± 1.3 mm，y 2.2 ± 1.5 mm，z 1.7 ± 1.4 mm  
+      * 滚转 ψ 误差 ≈ 1 °；俯仰/偏航由加速度计给出，误差 < 1 °  
+    * 距离 15 cm 时平均误差仍 < 5 mm，但 σ 增大。  
+  2. **成功率**  
+    * 若允许 11 mm 球形误差容限（典型胶囊直径），10 cm 工作层定位成功率 100%，15 cm 层约 84%。  
+  3. **实时性**  
+    * 单周期 19 ms，可与机器人 50 Hz 控制环闭合。  
+  4. **模块尺寸功耗**  
+    * 传感单元 15 mm × 18 mm，功耗 < 15 mW，可集成于无线胶囊。  
+
+  ### 关键词  
+  磁驱胶囊内镜 Hall-IMU融合 磁场地图查表 6 DOF 实时定位 永磁体偶极模型
+
+---
+
+- Closed Loop Control of a Tethered Magnetic Capsule Endoscope
+*A. Z. Taddese, P. R. Slawinski, K. L. Obstein and P. Valdastri; 2017; Publisher: Robotics: Science and Systems Foundation ; DOI: 10.15607/rss.2016.xii.018; https://dx.doi.org/10.15607/rss.2016.xii.018*
+
+  ### 想解决的问题  
+  1. 传统结肠镜“尾端推挤”导致黏膜应力大、患者不适，亟需前端牵引的磁驱软管镜以降低痛感。  
+  2. 单纯人工操控外部永磁体难以精细定位，且胶囊受软缆摩擦、褶皱阻挡易失耦合，造成操作低效。  
+  3. 现有磁驱系统多为开环或仅做 3-DoF 位置控制；缺乏结合实时 6-DoF 定位、可抵抗软缆扰动的闭环 4-DoF（平面位置+俯仰/偏航）控制框架。  
+
+  ### 具体做法  
+
+  #### 1. 硬件系统  
+  * 6-DoF 机器人 (Mitsubishi RV-6SDL) 末端安装 4″×4″ NdFeB 永磁体（EPM）。  
+  * 胶囊：φ20 mm×22 mm，内置小磁体 (11 mm)，6 轴 Hall + IMU，软缆承载摄像头、电线、灌注/工具通道。  
+  * 实时采样 100 Hz，经细软缆传输至 ROS 控制 PC。  
+
+  #### 2. 6-DoF 磁场定位  
+  1. 外磁场查表：COMSOL 预离线计算 EPM 场，利用轴对称性存储 1/4 平面。  
+  2. Hall 阵列测得外场 **b_c** → 旋转到 EPM 坐标系 **b_m**。  
+  3. 在场图中快速顺序搜索得到胶囊位置 **p_c**（3-DoF）。  
+  4. 扩展互补滤波 ECF 融合 IMU（俯仰/翻滚）+外场方向作偏航基准：  
+    * g 向量 → 计算俯仰φ、翻滚θ  
+    * 当胶囊靠近 EPM 奇异平面时，使用 ˆb_c × ˆb̄_c 误差补偿陀螺漂移，输出四元数 **q_c**。  
+  → 获得 6-DoF 位姿，无需 X 射线或视觉。  
+
+  #### 3. 磁力/力矩 – 机器人雅可比  
+  * 偶极–偶极模型：  
+    ```
+    f_m = 3μ0|m_a||m_c|/4π|p|^4 (m̂_a m̂_c^T + m̂_c m̂_a^T + (m̂_c^T Z m̂_a)I) p̂
+    τ_m = μ0|m_a||m_c|/4π|p|^3 m̂_c × D(p̂) m̂_a
+    ```
+    D = 3p̂p̂ᵀ−I , Z = I−5p̂p̂ᵀ  
+  * 推导 ∂f/∂p 等九个偏导，构建 **JF**(p,m̂_a,m̂_c)。  
+  * 将 EPM 几何雅可比 JA(q)（排除沿偶极轴旋转）嵌入，得 6×6 “力-力矩-关节”雅可比 **J_FA**。  
+
+  #### 4. 加权阻尼最小二乘 + 梯度投影  
+  ```
+  q̇ = J⁺_FA (u_f - f_curr , u_τ - τ_curr)ᵀ  +  β(I-J⁺_FA J_FA) ∇g
+  ```
+  * 任务空间权重 Wx：增大扭矩分量权重，优先稳向；  
+  * 关节权重 Wq：Liegeois 关节极限函数，保持机械臂肘上姿。  
+  * 目标函数 g(q)：引导 5-6 轴保持临床友好“肘上”配置。  
+
+  #### 5. 4-DoF PI 控制器  
+  * 位置：tangent 速度误差 + lateral 偏差 → f_d。  
+  * 姿态：heading 误差 **e_o** → τ_d。  
+  * 维持垂向吸引力 0.45 N（安全压壁），Z 向运动未控制。  
+
+  #### 6. 动力学仿真  
+  * Gazebo+ODE，编写磁交互插件；软缆离散多段+万向节+阻尼模拟。  
+  * 所有算法在 ROS 100 Hz 与实验平台无缝切换。  
+
+  ### 效果  
+
+  1. Gazebo 直线/正弦轨迹：  
+    * 平面均方误差 1.1 mm / 5.0 mm；航向误差 0.11 rad。  
+  2. 物理实验（水平双板+润滑油）：  
+    * 直线：均误差 1.2 ± 1.4 mm，最大 9.6 mm。  
+    * 正弦 A=55 mm λ=200 mm：均误差 10.3 ± 6.7 mm，最大 35.7 mm；平均航向误差 0.26 rad (15°)。  
+    * 误差量级 < 胶囊直径（20 mm），适应 34–75 mm 结肠腔径。  
+  3. 定位速率 100 Hz；整体闭环无磁耦丢失，可在软缆推拉扰动下快速恢复。  
+  4. 系统维持 0.5 N 以下壁压，符合临床安全阈值，展示了磁驱疼痛减轻潜力。  
+
+  ### 关键词  
+  磁驱胶囊内镜；闭环控制；外永磁–内磁偶极；实时磁场定位；加权阻尼最小二乘；梯度冗余分解；Gazebo 仿真；结肠镜替代
 
 
+---
+
+- Enhanced Real-Time Pose Estimation for Closed-Loop Robotic Manipulation of Magnetically Actuated Capsule Endoscopes
+*A. Z. Taddese, P. R. Slawinski, M. Pirotta, E. De Momi, K. L. Obstein and P. Valdastri; Int J Rob Res 2018 Vol. 37 Issue 8 Pages 890-911; Accession Number: 30150847 PMCID: PMC6108552 DOI: 10.1177/0278364918779132; https://www.ncbi.nlm.nih.gov/pubmed/30150847*
+
+  ### 想解决的问题  
+  1. 磁驱胶囊内镜闭环控制依赖 6-DOF 实时位姿估计，但单磁源定位存在两大瓶颈：  
+    * 奇异面（磁偶极 m 垂直平面）区定位发散，恰是临床常驻工作区。  
+    * 初始偏航角须人工精准校零，且运行中易漂移。  
+  2. 现有单永磁 + Hall/IMU 方案在奇异区误差可达厘米级，无法支撑可靠闭环导航与自动化操作。  
+
+  ### 具体做法  
+
+  #### 1. 双磁场混合定位架构  
+  * 在机器人末端永磁体（EPM，偶极 m_E）正交安装小型电磁线圈（m_C ⟂ m_E），线圈通 300 Hz PWM 方波产生微弱时变磁场。  
+  * Hall 阵列 6 轴布置于胶囊，IMU 提供俯仰/翻滚。采样 18 kHz → Goertzel 滤波：  
+    * 直流分量 → EPM 场 B_E  
+    * 基波幅值 → 线圈场 B_C  
+  * 两磁源在空间无共面奇异区，保证完整约束。  
+
+  #### 2. 观测模型  
+  ```
+  Bs_E = R_w^s^T · R_z(γ) · R̃_w^s · B_E(p)
+  Bs_C = R_w^s^T · R_z(γ) · R̃_w^s · B_C(p)
+  ```
+  其中 γ 为未知偏航漂移，R̃_w^s 由 IMU 解算。  
+  磁场模型：采用 Derby-Olbert 圆柱永磁/线圈闭式解 + 查表加速（180 mm 线圈，160 匝）。  
+
+  #### 3. 并行粒子滤波 6-DOF 状态估计  
+  * 状态 x = [p_x p_y p_z γ]ᵀ，随机游走过程。  
+  * 观测似然 p(z|x) 由 12 维磁场误差高斯化并加入归一化权重矩阵 W_z（三阶幅值差异）。  
+  * 1×10⁴ 粒子 OpenMP 并行，100 Hz 更新；卷积核 Q = diag(1.5 mm², … ,0.01 rad²)。  
+  * 粒子聚类球半径 η=0.1 提取鲁棒 MAP。  
+
+  #### 4. 闭环磁驱控制示例  
+  * 2D 位置 + 2D 姿态 PI 控制：  
+    * 滑动面：tangent 速度误差+ lateral 位置误差；  
+    * 线速度 5 mm/s，垂向力 0.45 N 限制。  
+  * 永磁体–胶囊力矩雅可比 J_FE 线性化求逆产生关节速度指令（6-DOF 机器人）。  
+
+  ### 效果  
+
+  1. 静态螺旋实验（150–200 mm 半径）：  
+    * 位置均方误差 ≤5 mm，姿态误差 φ,θ≈1°，ψ≈5°。  
+    * 在 EPM 奇异面误差仍 <6 mm / 4°。  
+  2. 与单源方法对比：在奇异区距离误差从 >40 mm 降至 <6 mm；无需初始偏航校准。  
+  3. 动态跟踪（10–50 mm/s）：闭环横向稳态误差 <8 mm，平均航向误差 <7°。  
+  4. 自动直线路径演示：胶囊受扰（手推软缆 40 mm）10 s 内恢复，维持 0.5 N 垂直安全力距。  
+
+  ### 关键词  
+  磁驱胶囊内镜；位姿估计；双磁场解耦；Hall-IMU 融合；粒子滤波；磁奇异性消除；闭环控制
+
+
+
+---
+
+- 6-D Spatial Localization of Wireless Magnetically Actuated Capsule Endoscopes Based on the Fusion of Hall Sensor Array and IMU
+*Y. L. Heng Zhang, Zheng Li; IEEE Sensors Journal 2022 Vol. 22*
+
+  ### 想解决的问题  
+  1. 现有基于霍尔阵列的磁定位只能获得 5-D 位姿，无法感知绕胶囊磁化轴的自旋（roll）。  
+  2. 仅靠 IMU 又无法估计绕重力轴的偏航（yaw），且纯积分会随时间漂移。  
+  3. 临床需要在外部电磁驱动下，对无线磁控胶囊内镜（WMACE）实时、精准、无辐射地获取 6-D（3D 位置 + 3D 姿态）位姿，以实现闭环导航与诊疗。  
+
+  ### 具体做法  
+  #### 1. 系统硬件  
+  1. WMACE 胶囊  
+    * 直径 11 mm×长度 30 mm；环形永磁壳，磁矩 0.65 A·m²，与重力方向初始夹角设定 90°。  
+    * 集成 6 轴 IMU（加速度计+陀螺仪）、摄像头、LED、BLE+AV 发射模块，实现视频与 IMU 数据无线传输。  
+  2. 5 × 5 三轴霍尔传感器阵列  
+    * 传感芯片：MLX90393（量程 5–50 mT）；阵列间距 d_H=8 mm。  
+    * STM32 采集，最高 200 Hz 上传。  
+  3. 外部电磁驱动：单线圈电磁铁（磁矩最高 289.7 A·m²）置于胶囊下方，用于运动控制并参与解耦计算。  
+
+  #### 2. 5-D 位置 + 姿态估计（霍尔阵列）  
+  1. 磁场模型：  
+    B(r)=μ₀/4πr³[3(r·m)r/r²−m]；总场 B_s= B_e(电磁体) + B_c(胶囊)。  
+  2. 两类优化算法：  
+    a. 直接估计 Dir-Est：最小化 25 点×3 轴磁场测量与模型差异 c₁(rc,mc)（LMA 迭代）。  
+    b. 二阶导 Sec-Der：对阵列磁场做五点二阶差分，构造 c₂(rc,mc)；对噪声更鲁棒。  
+  3. 取 5×5·3-axis Dir-Est 为最优方案：MAE 0.22 mm（动态环轨实验）。  
+
+  #### 3. 3-D 姿态估计（IMU）  
+  1. 加速度计：解算 pitch_acc, roll_acc。  
+  2. 磁矩方向：由上步霍尔估计的 m_c 求 yaw_mag, roll_mag。  
+  3. 陀螺仪：积分得 ω_roll,pitch,yaw → roll_gyro 等。  
+  4. 互补滤波 / 卡尔曼滤波融合  
+    * 状态向量 x=[roll, bias_roll, pitch, bias_pitch, yaw, bias_yaw]ᵀ  
+    * A,B,C 矩阵如公式(15)；过程噪声 Q、测量噪声 R 对角配置。  
+    * 滤波方程(16)(17)输出 roll_kalm, pitch_kalm, yaw_kalm。  
+  5. 关键假设：磁矩与重力初始垂直 ⇒ 霍尔提供 yaw，IMU 提供 roll，互补后获得全 3-D 姿态。  
+
+  #### 4. 多传感器 6-D 融合流程  
+  ```
+  Hall阵列 → 5-D (rc,mc)                    ┐
+                                            ├→ yaw_mag, roll_mag
+  IMU → acc, gyro → pitch_acc,roll_acc,ω   ┘
+  互补/卡尔曼滤波 → roll,pitch  (优先IMU)  
+  LMA迭代 + yaw_mag 更新 → yaw  
+  最终输出： rc(x,y,z) + 欧拉角(roll,pitch,yaw)
+  ```
+
+  ### 效果  
+  1. **动态实验**：36 mm 高度下跟踪圆轨迹，位置 MAE 0.22 mm；三种 orientation 滤波后误差 0.3° 级。  
+  2. **静态定位**（25–72 mm 高度）：  
+    * 3-D 位置 MAE 1.463 ± 0.288 mm；72–152 mm 误差随距离增至 26 mm。  
+  3. **静态姿态**：72 mm 高度，Kalman 滤波 roll 0.185°、pitch 0.169°、yaw 0.407° MAE。  
+  4. **对比文献**：综合精度优于 2020-2022 年基于单磁阵/反向磁阵/传感手套等方法（表 III）。  
+  5. **鲁棒性**：外部电磁场 0/57/290 A·m² 不影响定位精度；噪声 0.2 Gs 下模拟与实测一致。  
+
+  ### 关键词  
+  磁控胶囊内镜；6-D 位姿定位；霍尔阵列；IMU 融合；勒文伯格-马夸特；二阶磁场差分；互补滤波；卡尔曼滤波
 
 
 
@@ -958,4 +2109,4 @@ This repository is released under the MIT license. See [LICENSE](./LICENSE) for 
 # ⭐️ Star History <a id="star-history"></a>
 
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=yimouwu/Marvelous-Literature-Review&type=Date)](https://www.star-history.com/#yimouwu/Marvelous-Literature-Review&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=yimouwu/Marvelous-Literature-Review&type=Date)](https://star-history.com/#yimouwu/Marvelous-Literature-Review&Date)
